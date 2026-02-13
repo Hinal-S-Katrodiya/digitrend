@@ -12,7 +12,7 @@ export default function DesignShowcase() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center  px-6">
+    <div className="min-h-screen max-w-full bg-gray-50 flex flex-col items-center justify-center  px-6">
 
       {/* Top Text Section */}
       <h1 className="text-5xl md:text-7xl font-semibold text-gray-900 text-center mb-6">

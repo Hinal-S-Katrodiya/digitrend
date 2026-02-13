@@ -1,3 +1,4 @@
+import { Fullscreen } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 // ─── Brand data ──────────────────────────────────────────────────────────────
@@ -186,7 +187,7 @@ export default function SpiralBrands() {
   return (
     <div
       style={{
-        width: "100%",
+        width: Fullscreen,
         background: "#f2ede7",
         position: "relative",
         overflow: "hidden",

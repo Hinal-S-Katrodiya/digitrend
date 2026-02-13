@@ -61,8 +61,8 @@ const Header = () => {
   const [hoveredItem, setHoveredItem] = useState(null)
 
   return (
-    <header className="w-full bg-white border-b border-gray-200">
-      <div className="max-w-[1440px] mx-auto flex items-center justify-between px-8 lg:px-12 py-4">
+    <header className="w-full sticky top-0 z-50 bg-white border-b border-gray-200">
+      <div className="max-w-full mx-auto flex items-center justify-between px-8 lg:px-12 py-4">
         {/* Logo */}
         <Link to="/" className="flex-shrink-0">
           <WiproLogo />

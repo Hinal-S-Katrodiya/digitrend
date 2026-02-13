@@ -27,7 +27,7 @@ const features = [
 const FeatureCards = () => {
   return (
     <section className="w-full py-24 px-6 mt- -1.5" >
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-14 md:gap-10">
+      <div className="max-w-full mx-auto grid grid-cols-1 md:grid-cols-3 gap-14 md:gap-10">
         {features.map((feature) => (
           <div key={feature.title} className="flex flex-col items-center text-center">
             <img
