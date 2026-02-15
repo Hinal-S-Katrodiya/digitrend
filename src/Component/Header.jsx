@@ -1,108 +1,98 @@
 import { Link } from "react-router-dom";
+import { useState } from 'react';
 
-import { useState } from 'react'
-
-const WiproLogo = () => (
-  <svg viewBox="0 0 200 60" className="h-12 w-auto" xmlns="http://www.w3.org/2000/svg">
-    {/* Colorful dots pattern */}
-    {/* Top row */}
-    <circle cx="155" cy="5" r="3" fill="#1E3A8A" />
-    <circle cx="163" cy="5" r="3" fill="#3B82F6" />
-    {/* Second row */}
-    <circle cx="151" cy="13" r="3" fill="#F59E0B" />
-    <circle cx="159" cy="13" r="3" fill="#6366F1" />
-    <circle cx="167" cy="13" r="3" fill="#06B6D4" />
-    {/* Third row */}
-    <circle cx="155" cy="21" r="3" fill="#EF4444" />
-    <circle cx="163" cy="21" r="3" fill="#10B981" />
-    {/* Bottom dots */}
-    <circle cx="159" cy="29" r="3" fill="#F97316" />
-    <circle cx="159" cy="37" r="3" fill="#EAB308" />
-    <circle cx="159" cy="45" r="3" fill="#22C55E" />
-
-    {/* WIPRO text */}
-    <text x="0" y="42" fontFamily="'Inter', sans-serif" fontSize="38" fontWeight="700" fill="#3B1F8E" letterSpacing="-1">
-      DiGiTrend
-    </text>
-  </svg>
-)
-
-const ChevronDown = ({ className = '' }) => (
-  <svg
-    className={`w-3.5 h-3.5 ${className}`}
-    viewBox="0 0 12 12"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-)
-
-const GlobeIcon = () => (
-  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" />
-    <path d="M2 12h20" stroke="currentColor" strokeWidth="1.5" />
-    <path d="M12 2c2.5 3 4 6.5 4 10s-1.5 7-4 10" stroke="currentColor" strokeWidth="1.5" />
-    <path d="M12 2c-2.5 3-4 6.5-4 10s1.5 7 4 10" stroke="currentColor" strokeWidth="1.5" />
-    <path d="M4 7h16" stroke="currentColor" strokeWidth="1" opacity="0.5" />
-    <path d="M4 17h16" stroke="currentColor" strokeWidth="1" opacity="0.5" />
-  </svg>
-)
+// FIX: Go up one folder (../), into assets, and use .png
+import DigiLogo from '../assets/DiGi-Logo.png';
 
 const navItems = [
-  { label: 'What We Do', hasDropdown: true },
-  { label: 'What We Think', hasDropdown: false },
-  { label: 'About Wipro', hasDropdown: true },
-  { label: 'Careers', hasDropdown: false },
-  { label: 'Contact Us', hasDropdown: false },
+  { label: 'Services', hasDropdown: true },
+  { label: 'Benefits', hasDropdown: false },
+  { label: 'Portfolio', hasDropdown: true },
+  { label: 'Process', hasDropdown: false },
+  { label: 'Testimonials', hasDropdown: false },
+  { label: 'Pricing', hasDropdown: false },
+  { label: 'FAQs', hasDropdown: false },
 ]
 
 const Header = () => {
   const [hoveredItem, setHoveredItem] = useState(null)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   return (
     <header className="w-full sticky top-0 z-50 bg-white border-b border-gray-200">
-      <div className="max-w-full mx-auto flex items-center justify-between px-8 lg:px-12 py-4">
-        {/* Logo */}
-        <Link to="/" className="flex-shrink-0">
-          <WiproLogo />
-        </Link>
+      <div className="w-full md:px-8 lg:px-12 relative">
+        <div className="flex items-center justify-between">
 
-        {/* Navigation */}
-        <nav className="hidden lg:flex items-center gap-10 xl:gap-12">
-          {navItems.map((item) => (
-            <a
-              key={item.label}
-              href="#"
-              className="flex items-center gap-1.5 text-[15px] font-medium text-gray-800 hover:text-[#3B1F8E] transition-colors duration-200 whitespace-nowrap"
-              onMouseEnter={() => setHoveredItem(item.label)}
-              onMouseLeave={() => setHoveredItem(null)}
+          <Link to="/" className="flex-shrink-0">
+            <img
+              src={DigiLogo}
+              alt="DigiTrend Logo"
+              className="h-24 w-auto object-contain"
+            />
+          </Link>
+
+          {/* Toggle Button */}
+          <div className="flex items-center gap-4">
+            <button
+              type="button"
+              onClick={() => setIsMenuOpen((prev) => !prev)}
+              className="group flex items-center gap-3 bg-white hover:bg-gray-100 text-black px-5 py-2.5 rounded-full transition-all duration-300 font-bold uppercase tracking-wide border border-gray-200 shadow-sm"
             >
-              {item.label}
-              {item.hasDropdown && (
-                <ChevronDown
-                  className={`transition-transform duration-200 ${
-                    hoveredItem === item.label ? 'rotate-180' : ''
-                  }`}
-                />
-              )}
-            </a>
-          ))}
-        </nav>
-
-        {/* Language Selector */}
-        <div className="hidden lg:flex items-center gap-1.5 text-gray-700 cursor-pointer hover:text-[#3B1F8E] transition-colors duration-200">
-          <GlobeIcon />
-          <span className="text-[15px] font-medium">EN</span>
-          <ChevronDown />
+              <span className="hidden sm:block">Menu</span>
+              <div className="flex flex-col gap-1.5 relative w-6 h-4 justify-center">
+                <span className={`w-6 h-0.5 bg-black transition-all duration-300 ${isMenuOpen ? 'rotate-45 translate-y-[1px]' : ''}`} />
+                <span className={`w-6 h-0.5 bg-black transition-all duration-300 ${isMenuOpen ? '-rotate-45 -translate-y-[5px]' : ''}`} />
+              </div>
+            </button>
+          </div>
         </div>
 
-        {/* Mobile Menu Button */}
-        <button className="lg:hidden flex flex-col gap-1.5 p-2">
-          <span className="w-6 h-0.5 bg-gray-800"></span>
-          <span className="w-6 h-0.5 bg-gray-800"></span>
-          <span className="w-6 h-0.5 bg-gray-800"></span>
-        </button>
+        {/* MENU CARD */}
+        <div
+          className={`
+               absolute top-full mt-2 right-4 md:right-12
+                w-[90vw] sm:w-[350px] 
+                bg-white 
+                rounded-[2.5rem] 
+                p-8 
+                shadow-2xl 
+                origin-top-right transition-all duration-300 ease-in-out z-50
+                ${isMenuOpen ? 'opacity-100 scale-100 translate-y-0 visible' : 'opacity-0 scale-95 -translate-y-4 invisible'}
+            `}
+        >
+          <nav className="flex flex-col">
+            {navItems.map((item) => (
+              <a
+                key={item.label}
+                href="#"
+                className="group flex items-center justify-between text-3xl font-[900] text-black uppercase tracking-tight py-3 border-b-2 border-black transition-all duration-200"
+                onMouseEnter={() => setHoveredItem(item.label)}
+                onMouseLeave={() => setHoveredItem(null)}
+              >
+                <div className="flex items-center gap-2 transition-transform duration-300 group-hover:translate-x-2">
+                  {hoveredItem === item.label && (
+                    <span className="text-2xl text-[#3B1F8E]">»</span>
+                  )}
+                  {item.label}
+                </div>
+              </a>
+            ))}
+          </nav>
+
+          <div className="mt-8 pt-4 border-t-2 border-black flex justify-between items-center text-sm font-bold uppercase">
+            <span>© 2026 Digitrend</span>
+            <Link to="/contact" className="underline hover:text-gray-600 transition-colors">Contact Us</Link>
+          </div>
+        </div>
+
+        {/* Overlay Background */}
+        {isMenuOpen && (
+          <div
+            onClick={() => setIsMenuOpen(false)}
+            className="fixed inset-0 bg-black/50 z-40"
+            style={{ top: '80px' }}
+          />
+        )}
       </div>
     </header>
   )

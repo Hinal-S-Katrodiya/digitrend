@@ -55,76 +55,76 @@ export default function OurWork() {
   });
 
   const smooth = useSpring(scrollYProgress, {
-    stiffness: 80,
+    stiffness: 100,
     damping: 30,
+    mass: 1,
   });
 
-  // Only 1 clean rotation
+  // Rotates the ring 360 degrees as you scroll
   const rotateY = useTransform(smooth, [0, 1], [0, -360]);
 
-  // Perfect center vertical motion
-  const yMove = useTransform(smooth, [0, 1], [0, -450]);
+  // Radius of the ring (distance from center).
+  // Increase this if cards overlap too much.
+  const RADIUS = 550;
 
   return (
-    <div ref={containerRef} className="relative h-[320vh] bg-white">
-      <div className="sticky top-0 h-screen w-full flex items-center justify-center">
+    <div ref={containerRef} className="relative h-[400vh] bg-white">
+      {/* Sticky container that holds the scene */}
+      <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden">
 
-        {/* HARD MASK CLIPPING */}
-        <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
-
-          <div
-            className="relative w-full h-full flex items-center justify-center"
-            style={{ perspective: "1400px" }}
+        {/* 3D Scene Wrapper */}
+        <div
+          className="relative flex items-center justify-center"
+          style={{
+            perspective: "1200px",
+            // Tilted slightly down to see the 3D effect better (optional)
+            perspectiveOrigin: "50% -100px"
+          }}
+        >
+          <motion.div
+            style={{
+              rotateY,
+              transformStyle: "preserve-3d",
+            }}
+            className="relative w-0 h-0 flex items-center justify-center"
           >
-            <motion.div
-              style={{
-                rotateY,
-                y: yMove,
-                transformStyle: "preserve-3d",
-              }}
-              className="relative w-0 h-0"
-            >
-              {PROJECTS.map((project, index) => {
-                const angle = (360 / PROJECTS.length) * index;
-                const vertical = index * 120;
+            {PROJECTS.map((project, index) => {
+              const count = PROJECTS.length;
+              const angle = (360 / count) * index;
 
-                return (
-                  <div
-                    key={project.id}
-                    className="absolute"
-                    style={{
-                      transform: `rotateY(${angle}deg) translateY(${vertical}px)`,
-                      transformStyle: "preserve-3d",
-                    }}
-                  >
-                    <div
-                      className="w-[220px] h-[300px] rounded-2xl overflow-hidden shadow-2xl"
-                      style={{
-                        transform: "translateZ(400px)",
-                        backfaceVisibility: "hidden",
-                      }}
-                    >
-                      <img
-                        src={project.image}
-                        alt={project.title}
-                        className="w-full h-full object-cover"
-                      />
+              return (
+                <div
+                  key={project.id}
+                  className="absolute"
+                  style={{
+                    // Rotate the card to its angle, then push it out by RADIUS
+                    transform: `rotateY(${angle}deg) translateZ(${RADIUS}px)`,
+                    transformStyle: "preserve-3d",
+                  }}
+                >
+                  {/* Card Content */}
+                  {/* -translate-x-1/2 centers the card on its anchor point */}
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[450px] rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-white">
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      className="w-full h-full object-cover"
+                    />
 
-                      <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center text-white text-center p-4">
-                        <p className="text-[10px] tracking-widest mb-1 opacity-80">
-                          {project.category}
-                        </p>
-                        <h3 className="text-xl font-bold">
-                          {project.title}
-                        </h3>
-                      </div>
+                    {/* Overlay */}
+                    <div className="absolute inset-0 bg-black/20 hover:bg-black/40 transition-colors duration-300 flex flex-col items-center justify-center text-white text-center p-6">
+                      <p className="text-xs font-bold tracking-[0.2em] mb-2 uppercase opacity-90">
+                        {project.category}
+                      </p>
+                      <h3 className="text-3xl font-bold tracking-tight">
+                        {project.title}
+                      </h3>
                     </div>
                   </div>
-                );
-              })}
-            </motion.div>
-          </div>
-
+                </div>
+              );
+            })}
+          </motion.div>
         </div>
       </div>
     </div>
