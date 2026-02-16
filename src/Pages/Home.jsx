@@ -18,7 +18,7 @@ function Home() {
       {/* 2. REMOVED: <Header /> (This removes the duplicate) */}
 
       <Hero />
-      <div className="flex items-center justify-center">
+      <div>
         <Logo />
       </div>
       <Third />

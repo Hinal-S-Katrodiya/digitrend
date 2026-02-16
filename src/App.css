@@ -1,13 +1,18 @@
+/* App.css */
 body {
   margin: 0;
   padding: 0;
   width: 100%;
+  overflow-x: hidden;
+  /* Prevents horizontal scrollbar if animations go off-screen */
 }
 
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
+  width: 100%;
+  margin: 0;
+  padding: 0;
   text-align: center;
+  /* REMOVED: max-width: 1280px; */
 }
 
 .logo {

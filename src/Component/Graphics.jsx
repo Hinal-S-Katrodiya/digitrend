@@ -1,3 +1,5 @@
+//fixing this part right now
+
 import React from "react";
 
 export default function DesignShowcase() {
@@ -12,72 +14,90 @@ export default function DesignShowcase() {
   ];
 
   return (
-    <div className="min-h-screen max-w-full bg-gray-50 flex flex-col items-center justify-center  px-6">
+    <div className="min-h-screen w-full bg-gray-50 flex flex-col items-center justify-center py-20 overflow-hidden relative">
 
-      {/* Top Text Section */}
-      <h1 className="text-5xl md:text-7xl font-semibold text-gray-900 text-center mb-6">
+      {/* Background Decorative Blob */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[800px] h-[500px] bg-teal-200/20 blur-[120px] rounded-full pointer-events-none" />
+
+      {/* Pill Badge */}
+      <div className="mb-8 px-4 py-1.5 rounded-full bg-white border border-teal-100 shadow-sm flex items-center gap-2 z-10">
+        <span className="text-teal-500 text-sm">✨</span>
+        <span className="text-teal-600 text-sm font-semibold tracking-wide uppercase">Graphics</span>
+      </div>
+
+      {/* Heading */}
+      <h1 className="text-5xl md:text-7xl font-bold text-gray-900 text-center mb-6 tracking-tight z-10 font-magic">
         Design to Stare
       </h1>
 
-      <p className="text-gray-500 text-center max-w-3xl mb-20 text-lg">
+      <p className="text-gray-500 text-center max-w-2xl mb-20 text-lg md:text-xl px-4 z-10 leading-relaxed">
         We create the most stunning graphic designs for your social media,
         websites, branding, or literally anything. They are just mind-blowing.
       </p>
 
-      {/* 3D Container */}
+      {/* 3D Container - Panoramic Curve */}
       <div
-        className="flex items-center justify-center w-full"
-        style={{ perspective: "1400px" }}
+        className="flex items-center justify-center w-full z-10 h-[500px]" // Added specific height to container
+        style={{ perspective: "1000px" }}
       >
-        <div className="flex items-center relative">
+        <div
+          className="flex items-center justify-center relative w-full h-full"
+          style={{ transformStyle: "preserve-3d" }} // CRITICAL FIX for 3D effect
+        >
 
-          {/* LEFT BIG */}
+          {/* LOGIC FIXED:
+             - Increased translateX spacing (e.g., 380px instead of 260px) to stop overlapping.
+             - Added 'isCenter' logic to highlight the middle card.
+          */}
+
+          {/* LEFT OUTER */}
           <Card
             img={images[0]}
-            transform="rotateY(-50deg) translateX(-220px) scale(1.3)"
-            z="40"
-          />
-
-          {/* LEFT MID */}
-          <Card
-            img={images[1]}
-            transform="rotateY(-35deg) translateX(-140px) scale(1.15)"
-            z="30"
-          />
-
-          {/* LEFT SMALL */}
-          <Card
-            img={images[2]}
-            transform="rotateY(-15deg) translateX(-60px) scale(0.95)"
-            z="20"
-          />
-
-          {/* CENTER SMALLEST */}
-          <Card
-            img={images[3]}
-            transform="rotateY(0deg) scale(0.85)"
+            transform="translateX(-700px) translateZ(50px) rotateY(80deg)"
             z="10"
           />
 
-          {/* RIGHT SMALL */}
+          {/* LEFT INNER */}
           <Card
-            img={images[4]}
-            transform="rotateY(15deg) translateX(60px) scale(0.95)"
+            img={images[1]}
+            transform="translateX(-510px) translateZ(0px) rotateY(50deg)"
             z="20"
           />
-
-          {/* RIGHT MID */}
           <Card
-            img={images[5]}
-            transform="rotateY(35deg) translateX(140px) scale(1.15)"
-            z="30"
+            img={images[2]}
+            transform="translateX(-300px) translateZ(-50px) rotateY(30deg)"
+            z="10"
           />
 
-          {/* RIGHT BIG */}
+          <Card
+            img={images[3]}
+            transform=" translateX(-70px) translateZ(-50px) scale(1.1) rotateY(20deg)"
+            z="30"
+            isCenter={true}
+          />
+
+          {/* CENTER */}
+          <Card
+            img={images[4]}
+            transform=" translateX(160px) translateZ(-50px) scale(1.1) rotateY(-30deg)"
+            z="30"
+            isCenter={true}
+          />
+
+
+          {/* RIGHT INNER */}
+
+          {/* RIGHT OUTER */}
+          <Card
+            img={images[5]}
+            transform="translateX(490px) translateZ(50px) rotateY(-50deg)"
+            z="10"
+          />
+
           <Card
             img={images[6]}
-            transform="rotateY(50deg) translateX(220px) scale(1.3)"
-            z="40"
+            transform="translateX(700px) translateZ(50px) rotateY(-80deg)"
+            z="10"
           />
 
         </div>
@@ -86,20 +106,29 @@ export default function DesignShowcase() {
   );
 }
 
-function Card({ img, transform, z }) {
+function Card({ img, transform, z, isCenter }) {
   return (
     <div
-      className="w-30 h-40 rounded-3xl overflow-hidden shadow-[0_30px_80px_rgba(0,0,0,0.15)] transition-all duration-500"
+      className={`absolute transition-all duration-700 ease-out origin-center ${isCenter ? 'shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)]' : 'shadow-xl'}`}
       style={{
         transform: transform,
         zIndex: z,
+        width: '200px', // Wider cards
+        height: '280px', // Taller cards
+        borderRadius: '1.5rem',
+        overflow: 'hidden',
+        backgroundColor: 'white',
+        border: '6px solid black', // Thicker white border like reference
       }}
     >
       <img
-        src={`${img}?auto=format&fit=crop&w=800&q=80`}
+        src={`${img}?auto=format&fit=crop&w=600&q=80`}
         alt="design"
         className="w-full h-full object-cover"
       />
+
+      {/* Shine effect */}
+      <div className="absolute inset-0 bg-gradient-to-tr from-white/30 to-transparent pointer-events-none" />
     </div>
   );
 }
