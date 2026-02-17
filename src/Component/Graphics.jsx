@@ -12,7 +12,7 @@ export default function DesignShowcase() {
   ];
 
   return (
-    <div className="min-h-screen max-w-full bg-gray-50 flex flex-col items-center justify-center  px-6">
+    <div className="min-h-screen w-full flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8">
 
       {/* Top Text Section */}
       <h1 className="text-5xl md:text-7xl font-semibold text-gray-900 text-center mb-6">
@@ -26,7 +26,7 @@ export default function DesignShowcase() {
 
       {/* 3D Container */}
       <div
-        className="flex items-center justify-center w-full"
+        className="flex items-center justify-center w-full "
         style={{ perspective: "1400px" }}
       >
         <div className="flex items-center relative">

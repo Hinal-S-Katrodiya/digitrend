@@ -1,4 +1,3 @@
-import { Fullscreen } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 // ─── Brand data ──────────────────────────────────────────────────────────────
@@ -187,8 +186,8 @@ export default function SpiralBrands() {
   return (
     <div
       style={{
-        width: Fullscreen,
-        background: "#f2ede7",
+        width: "100%",
+        background: "white",
         position: "relative",
         overflow: "hidden",
         userSelect: "none",
@@ -232,18 +231,8 @@ export default function SpiralBrands() {
           <BrandCard key={item.uid} item={item} />
         ))}
 
-        {/* left fade */}
-        <div style={{
-          position: "absolute", left: 0, top: 0, width: 90, height: "100%",
-          background: "linear-gradient(to right, #f2ede7, transparent)",
-          zIndex: 25, pointerEvents: "none",
-        }} />
-        {/* right fade */}
-        <div style={{
-          position: "absolute", right: 0, top: 0, width: 90, height: "100%",
-          background: "linear-gradient(to left, #f2ede7, transparent)",
-          zIndex: 25, pointerEvents: "none",
-        }} />
+       
+        
       </div>
 
      

@@ -1,111 +1,107 @@
 import { Link } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import DiGiLogo from "../assets/DiGiLogo.png";
 
-import { useState } from 'react'
-
-const WiproLogo = () => (
-  <svg viewBox="0 0 200 60" className="h-12 w-auto" xmlns="http://www.w3.org/2000/svg">
-    {/* Colorful dots pattern */}
-    {/* Top row */}
-    <circle cx="155" cy="5" r="3" fill="#1E3A8A" />
-    <circle cx="163" cy="5" r="3" fill="#3B82F6" />
-    {/* Second row */}
-    <circle cx="151" cy="13" r="3" fill="#F59E0B" />
-    <circle cx="159" cy="13" r="3" fill="#6366F1" />
-    <circle cx="167" cy="13" r="3" fill="#06B6D4" />
-    {/* Third row */}
-    <circle cx="155" cy="21" r="3" fill="#EF4444" />
-    <circle cx="163" cy="21" r="3" fill="#10B981" />
-    {/* Bottom dots */}
-    <circle cx="159" cy="29" r="3" fill="#F97316" />
-    <circle cx="159" cy="37" r="3" fill="#EAB308" />
-    <circle cx="159" cy="45" r="3" fill="#22C55E" />
-
-    {/* WIPRO text */}
-    <text x="0" y="42" fontFamily="'Inter', sans-serif" fontSize="38" fontWeight="700" fill="#3B1F8E" letterSpacing="-1">
-      DiGiTrend
-    </text>
-  </svg>
-)
-
-const ChevronDown = ({ className = '' }) => (
-  <svg
-    className={`w-3.5 h-3.5 ${className}`}
-    viewBox="0 0 12 12"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-)
-
-const GlobeIcon = () => (
-  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" />
-    <path d="M2 12h20" stroke="currentColor" strokeWidth="1.5" />
-    <path d="M12 2c2.5 3 4 6.5 4 10s-1.5 7-4 10" stroke="currentColor" strokeWidth="1.5" />
-    <path d="M12 2c-2.5 3-4 6.5-4 10s1.5 7 4 10" stroke="currentColor" strokeWidth="1.5" />
-    <path d="M4 7h16" stroke="currentColor" strokeWidth="1" opacity="0.5" />
-    <path d="M4 17h16" stroke="currentColor" strokeWidth="1" opacity="0.5" />
-  </svg>
-)
-
-const navItems = [
-  { label: 'What We Do', hasDropdown: true },
-  { label: 'What We Think', hasDropdown: false },
-  { label: 'About Wipro', hasDropdown: true },
-  { label: 'Careers', hasDropdown: false },
-  { label: 'Contact Us', hasDropdown: false },
-]
+const Logo = () => (
+  <img
+    src={DiGiLogo}
+    alt="DiGi Trend"
+    className="h-8 
+    sm:h-12 
+    md:h-14 
+    lg:h-22
+    w-auto 
+    object-contain"
+  />
+);
 
 const Header = () => {
-  const [hoveredItem, setHoveredItem] = useState(null)
+  const [open, setOpen] = useState(false);
+
+  // 🔥 Scroll hide/show states
+  const [showHeader, setShowHeader] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  const dropdownRef = useRef(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // 🔥 Scroll logic
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY < 50) {
+        setShowHeader(true);
+      } else if (window.scrollY > lastScrollY) {
+        setShowHeader(false); // scrolling down → hide
+      } else {
+        setShowHeader(true); // scrolling up → show
+      }
+
+      setLastScrollY(window.scrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
 
   return (
-    <header className="w-full sticky top-0 z-50 bg-white border-b border-gray-200">
-      <div className="max-w-full mx-auto flex items-center justify-between px-8 lg:px-12 py-4">
+    <header
+      className={`fixed top-0 left-0 w-full bg-white border-b z-50 transition-transform duration-300 ${
+        showHeader ? "translate-y-0" : "-translate-y-full"
+      }`}
+    >
+      <div className="max-w-auto mx-auto flex items-center justify-between px-3 sm:px-1 md:px-6 py-1 pt-0.5">
         {/* Logo */}
-        <Link to="/" className="flex-shrink-0">
-          <WiproLogo />
+        <Link to="/" reloadDocument>
+          <Logo />
         </Link>
 
-        {/* Navigation */}
-        <nav className="hidden lg:flex items-center gap-10 xl:gap-12">
-          {navItems.map((item) => (
-            <a
-              key={item.label}
-              href="#"
-              className="flex items-center gap-1.5 text-[15px] font-medium text-gray-800 hover:text-[#3B1F8E] transition-colors duration-200 whitespace-nowrap"
-              onMouseEnter={() => setHoveredItem(item.label)}
-              onMouseLeave={() => setHoveredItem(null)}
-            >
-              {item.label}
-              {item.hasDropdown && (
-                <ChevronDown
-                  className={`transition-transform duration-200 ${
-                    hoveredItem === item.label ? 'rotate-180' : ''
-                  }`}
-                />
-              )}
-            </a>
-          ))}
-        </nav>
+        {/* Services Button */}
+        <div className="relative" ref={dropdownRef}>
+          <button
+            onClick={() => setOpen(!open)}
+            className="bg-blue-900  text-white px-2 py-2 rounded-xl font-medium transform transition-all duration-500 ease-out"
+          >
+            Menu
+          </button>
 
-        {/* Language Selector */}
-        <div className="hidden lg:flex items-center gap-1.5 text-gray-700 cursor-pointer hover:text-[#3B1F8E] transition-colors duration-200">
-          <GlobeIcon />
-          <span className="text-[15px] font-medium">EN</span>
-          <ChevronDown />
+          {/* Dropdown */}
+          <div
+            className={`absolute right-0 mt-3 w-60 bg-white rounded-lg shadow-xl border border-gray-200 py-3 transform transition-all duration-300 ease-out ${
+              open
+                ? "opacity-100 scale-100 translate-y-0"
+                : "opacity-0 scale-95 -translate-y-2 pointer-events-none"
+            }`}
+          >
+            <Link to="/benefits" className="block px-5 py-2 hover:bg-gray-100">
+              Benefits
+            </Link>
+            <Link to="#" className="block px-5 py-2 hover:bg-gray-100">
+              Trusted Partners
+            </Link>
+            <Link to="#" className="block px-5 py-2 hover:bg-gray-100">
+              Our Design
+            </Link>
+            <Link to="#" className="block px-5 py-2 hover:bg-gray-100">
+              Services
+            </Link>
+            <Link to="/" className="block px-5 py-2 hover:bg-gray-100">
+              Our Best Work
+            </Link>
+          </div>
         </div>
-
-        {/* Mobile Menu Button */}
-        <button className="lg:hidden flex flex-col gap-1.5 p-2">
-          <span className="w-6 h-0.5 bg-gray-800"></span>
-          <span className="w-6 h-0.5 bg-gray-800"></span>
-          <span className="w-6 h-0.5 bg-gray-800"></span>
-        </button>
       </div>
     </header>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;

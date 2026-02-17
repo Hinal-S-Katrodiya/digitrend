@@ -9,6 +9,11 @@ import SpiralBrands from '../Component/Spiral'
 import DesignShowcase from '../Component/Graphics'
 import ServicesComponent from '../Component/Service'
 import OurWork from '../Component/OurWork'
+import ReviewSection from '../Component/Review'
+import Client from '../Component/Client'
+import FAQSection from '../Component/FAQ'
+import Footer from '../Component/Footer'
+import Contact from '../Component/Contact'
 
 
 
@@ -23,9 +28,14 @@ function Home() {
       <Third /> 
       <FeatureCards />
       <SpiralBrands />
-      <DesignShowcase />
+      <DesignShowcase /> 
       <ServicesComponent />
       <OurWork />
+      <ReviewSection />
+      <Contact/>
+      <Client />
+      <FAQSection />
+      <Footer/>
       
       
           </>

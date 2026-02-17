@@ -16,6 +16,9 @@ export default function Third() {
     },
   };
 
+ const line1 = "Websites that Sells & ";
+const line2 = "Ads that Convert";
+
   const itemVariants = {
     hidden: { opacity: 0, y: 20, filter: "blur(10px)" },
     visible: {
@@ -34,24 +37,23 @@ export default function Third() {
 
   return (
     <div className="relative min-h-screen w-full bg-white flex items-center justify-center overflow-hidden font-sans">
-
       {/* Background */}
       <div className="absolute inset-0 opacity-30" style={dotPattern} />
 
       {/* =================== BUBBLES =================== */}
 
       {/* Bubble 1 - Timeless */}
-   <motion.div
-  animate={{ y: [0, -30, 0], rotate: [0, 5, 0] }}
-  transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-  style={{ clipPath: "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)" }}
-  className="absolute top-24 left-46 w-38 h-38 bg-gradient-to-br from-indigo-500/60 to-blue-400/40 backdrop-blur-3xl border border-white/40 shadow-2xl flex items-center justify-center text-white font-semibold text-xl"
->
-  Timeless
-</motion.div>
-
-
-
+      <motion.div
+        animate={{ y: [0, -30, 0], rotate: [0, 5, 0] }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        style={{
+          clipPath:
+            "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)",
+        }}
+        className="absolute top-24 left-46 w-38 h-38 bg-gradient-to-br from-indigo-500/60 to-blue-400/40 backdrop-blur-3xl border border-white/40 shadow-2xl flex items-center justify-center text-white font-semibold text-xl"
+      >
+        Timeless
+      </motion.div>
 
       {/* Bubble 2 - Creative */}
       <motion.div
@@ -67,45 +69,48 @@ export default function Third() {
       </motion.div>
 
       {/* Bubble 3 - Edgy */}
-     <motion.div
-  animate={{ y: [0, -20, 0], rotate: [0, -5, 0] }}
-  transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
-  className="absolute top-1/3 right-10 w-52 h-52 flex items-center justify-center"
->
-  <svg viewBox="0 0 200 200" className="w-full h-full">
-
-    {/* Spiky Sunburst */}
-    <polygon
-      points="
-        100,5 112,40 145,15 135,50 175,45
-        145,75 190,100 145,125 175,155
-        135,150 145,185 112,160 100,195
-        88,160 55,185 65,150 25,155
-        55,125 10,100 55,75 25,45
-        65,50 55,15 88,40
-       
-        
-      "
-      fill="#F4E6C8"
-      stroke="#F2C94C"
-      strokeWidth="6"
-    />
-
-    {/* Text */}
-    <text
-      x="50%"
-      y="52%"
-      textAnchor="middle"
-      dominantBaseline="middle"
-      transform="rotate(-12 100 100)"
-      className="fill-black font-bold text-[22px]"
-    >
-      Edgy
-    </text>
-
-  </svg>
-</motion.div>
-
+      <motion.div
+        animate={{ y: [0, -15, 0], rotate: [0, -5, 0] }}
+        transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-1/3 right-40 w-32 h-32 flex items-center justify-center"
+      >
+        <svg viewBox="0 0 200 200" className="w-full h-full">
+          {(() => {
+            const cx = 100,
+              cy = 100;
+            const outerR = 95,
+              innerR = 55;
+            const spikes = 18;
+            let points = "";
+            for (let i = 0; i < spikes; i++) {
+              const outerAngle = (Math.PI * 2 * i) / spikes - Math.PI / 2;
+              const innerAngle =
+                (Math.PI * 2 * (i + 0.5)) / spikes - Math.PI / 2;
+              points += `${cx + outerR * Math.cos(outerAngle)},${cy + outerR * Math.sin(outerAngle)} `;
+              points += `${cx + innerR * Math.cos(innerAngle)},${cy + innerR * Math.sin(innerAngle)} `;
+            }
+            return (
+              <polygon
+                points={points.trim()}
+                fill="#F4E6C8"
+                stroke="#F2C94C"
+                strokeWidth="5"
+                strokeLinejoin="miter"
+              />
+            );
+          })()}
+          <text
+            x="50%"
+            y="52%"
+            textAnchor="middle"
+            dominantBaseline="middle"
+            transform="rotate(-12 100 100)"
+            className="fill-black font-bold text-[18px]"
+          >
+            Edgy
+          </text>
+        </svg>
+      </motion.div>
 
       {/* =================== CONTENT =================== */}
 
@@ -113,34 +118,50 @@ export default function Third() {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="relative z-10 flex flex-col items-center text-center px-4 max-w-5xl"
+        className="relative z-10 flex flex-col items-center text-center px-4 w-full max-w-7xl"
       >
         <motion.div
           variants={itemVariants}
           className="flex items-center gap-2 px-4 py-1.5 rounded-full border border-black/20 bg-black/5 backdrop-blur-md mb-12"
         >
           <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-          <span className="text-sm text-black font-medium">
+          <span className="text-sm text-black font-medium ">
             Get ready to level up your digital presence 🚀
           </span>
         </motion.div>
 
-        <motion.h1
-          variants={itemVariants}
-          className="text-2xl md:text-4xl lg:text-6xl font-bold text-black leading-[1.1] mb-8"
-        >
-          We Create <span className="text-blue-900">Websites</span> <br />
-          that Sells & <span className="text-blue-900">Ads</span> that Convert
+        <motion.h1 variants={itemVariants}>
+          <div
+            className="  font-oswald
+  font-normal
+  uppercase
+  text-left
+  leading-[100%]
+  tracking-[-13px]
+  text-[130px]
+  scale-y-140
+  
+   text-blue-900"
+          >
+            We Create
+          </div>
+         
         </motion.h1>
-
-        <motion.p
-          variants={itemVariants}
-          className="text-lg md:text-xl text-gray-500 max-w-2xl mb-12"
-        >
-          Top-Tier Web Design & Digital Experiences for
-          High-Impact Brands
-        </motion.p>
-
+      
+      
+        
+       <motion.h1 className="text-gray-800 ml-8 mt-5 mb-5 text-center pt-1.5 text-6xl font-semibold leading-[95%]">
+      {[line1, line2].map((line, lineIndex) => (
+        <div key={lineIndex}>
+          {line.split("").map((letter, index) => (
+            <span key={index} className="inline-block">
+              {letter === " " ? "\u00A0" : letter}
+            </span>
+          ))}
+        </div>
+      ))}
+    </motion.h1>
+        
         <motion.button
           variants={itemVariants}
           whileHover={{ scale: 1.05 }}

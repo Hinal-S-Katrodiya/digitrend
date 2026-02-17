@@ -96,8 +96,8 @@ const ServicesComponent = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white py-20 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen w-full bg-white py-20 px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-7xl mx-auto">
         {/* Header Section */}
           <section className="relative  flex items-center justify-center px-6 py-20 overflow-hidden">
       
