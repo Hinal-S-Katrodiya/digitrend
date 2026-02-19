@@ -1,115 +1,138 @@
-import React from "react";
+const images = [
+  {
+    url: "https://images.unsplash.com/photo-1474511320723-9a56873867b5?w=400&q=80",
+    label: "Animals",
+  },
+  {
+    url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80",
+    label: "Geography",
+  },
+  {
+    url: "https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?w=400&q=80",
+    label: "History",
+  },
+  {
+    url: "https://images.unsplash.com/photo-1493210977493-3ba2d8a29fd0?w=400&q=80",
+    label: "Entertainment",
+  },
+  {
+    url: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=400&q=80",
+    label: "Space",
+  },
+   {
+    url: "https://images.unsplash.com/photo-1493210977493-3ba2d8a29fd0?w=400&q=80",
+    label: "Entertainment",
+  },
+  {
+    url: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=400&q=80",
+    label: "Space",
+  }
+];
 
-export default function ReviewSection() {
-  const reviews = [
-    {
-      name: "Aarav Patel",
-      role: "Product Manager",
-      review:
-        "Amazing service! The team delivered beyond expectations and the UI quality is outstanding.",
-    },
-    {
-      name: "Riya Shah",
-      role: "Startup Founder",
-      review:
-        "Professional and creative team. They transformed our idea into a beautiful product.",
-    },
-    {
-      name: "Vikram Mehta",
-      role: "CEO",
-      review:
-        "Their attention to detail and performance optimization impressed us a lot.",
-    },
-    {
-      name: "Sneha Kapoor",
-      role: "Marketing Head",
-      review:
-        "Smooth communication and excellent design sense. Highly recommended!",
-    },
-  ];
+const ROPE_PATH =
+  "M 0,60 Q 250,140 500,140 Q 750,140 1000,60";
 
+
+const CARD_WIDTH = 150;
+const CARD_HEIGHT = 160;
+const STRING_LENGTH = 20;
+
+export default function HangingImages() {
   return (
-    <section className="py-20 bg-gray-50 overflow-hidden">
-      <div className="text-center mb-14">
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-800">
+    <>
+      <div className="mt-9 mb-7">
+     <div className="text-center  ">
+        <h2 className=" text-5xl md:text-7xl font-bold text-gray-800">
           What Our Customers Say
         </h2>
         <p className="text-gray-500 mt-3">Trusted by businesses worldwide</p>
       </div>
-
-      {/* Top Row (Left Direction) */}
-      <div className="overflow-hidden">
-        <div className="flex marquee">
-          {[...reviews, ...reviews].map((item, index) => (
-            <ReviewCard key={index} {...item} />
-          ))}
-        </div>
-      </div>
-
-      {/* Bottom Row (Right Direction) */}
-      <div className="overflow-hidden mt-10">
-        <div className="flex marquee-reverse">
-          {[...reviews, ...reviews].map((item, index) => (
-            <ReviewCard key={index} {...item} />
-          ))}
-        </div>
-      </div>
-
-      {/* Animation Styles */}
-      <style>
-        {`
-          .marquee {
-            animation: scroll-left 35s linear infinite;
-          }
-
-          .marquee-reverse {
-            animation: scroll-right 35s linear infinite;
-          }
-
-          @keyframes scroll-left {
-            0% { transform: translateX(0%); }
-            100% { transform: translateX(-50%); }
-          }
-
-          @keyframes scroll-right {
-            0% { transform: translateX(-50%); }
-            100% { transform: translateX(0%); }
-          }
-        `}
-      </style>
-    </section>
-  );
-}
-
-function Star() {
-  return (
-    <svg
-      className="w-4 h-4 text-yellow-400"
-      fill="currentColor"
-      viewBox="0 0 20 20"
+    <div
+      style={{
+        width: "100%",
+        
+        overflow: "hidden",
+        padding: "0px 0",
+      }}
     >
-      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.963a1 1 0 00.95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.37 2.45a1 1 0 00-.364 1.118l1.287 3.962c.3.922-.755 1.688-1.54 1.118l-3.37-2.45a1 1 0 00-1.175 0l-3.37 2.45c-.784.57-1.838-.196-1.539-1.118l1.287-3.962a1 1 0 00-.364-1.118l-3.37-2.45c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 00.95-.69l1.286-3.963z" />
-    </svg>
-  );
-}
+      <svg
+        viewBox="0 0 1000 320"
+        preserveAspectRatio="xMidYMid meet"
+        style={{ width: "100%" }}
+      >
+        {/* Rope */}
+        <path
+          id="ropePath"
+          d={ROPE_PATH}
+          stroke="#8B6914"
+          strokeWidth="3"
+          fill="none"
+          strokeLinecap="round"
+        />
 
-function ReviewCard({ name, role, review }) {
-  return (
-    <div className="w-80 mx-3 bg-white rounded-xl p-3 flex-shrink-0 hover:shadow-lg transition">
-      <div className="flex">
-        <Star />
-        <Star />
-        <Star />
-        <Star />
-        <Star />
+        {images.map((img, i) => (
+          <g key={i}>
+            <g>
+              {/* String */}
+              <line
+                x1="0"
+                y1="0"
+                x2="0"
+                y2={STRING_LENGTH}
+                stroke="#8B6914"
+                strokeWidth="2"
+              />
+
+              {/* Green Pin */}
+              <circle cx="0" cy="0" r="6" fill="#22a553" />
+              <circle cx="0" cy="0" r="2.5" fill="#fff" />
+
+              {/* Card */}
+              <g transform={`translate(${-CARD_WIDTH / 2}, ${STRING_LENGTH})`}>
+                <rect
+                  width={CARD_WIDTH}
+                  height={CARD_HEIGHT}
+                  rx="14"
+                  fill="white"
+                  stroke="#ddd"
+                />
+
+                <image
+                  href={img.url}
+                  x="8"
+                  y="8"
+                  width={CARD_WIDTH - 16}
+                  height={CARD_HEIGHT - 45}
+                  preserveAspectRatio="xMidYMid slice"
+                />
+
+                <text
+                  x={CARD_WIDTH / 2}
+                  y={CARD_HEIGHT - 12}
+                  textAnchor="middle"
+                  fontSize="12"
+                  fontWeight="bold"
+                  fill="#222"
+                >
+                  {img.label}
+                </text>
+              </g>
+
+              {/* PERFECT Motion Along Rope */}
+              <animateMotion
+                dur="18s"
+                repeatCount="indefinite"
+                rotate="auto"
+                begin={`${i * 3}s`}
+              >
+                <mpath href="#ropePath" />
+              </animateMotion>
+            </g>
+          </g>
+        ))}
+      </svg>
       </div>
-
-      <p className="text-gray-600 text-sm leading-relaxed">“{review}”</p>
-
-      <div className="mt-4">
-        <h4 className="font-semibold text-gray-800">@{name}</h4>
-        <p className="text-xs text-gray-500">{role}</p>
       </div>
-    </div>
+      </>
   );
 }

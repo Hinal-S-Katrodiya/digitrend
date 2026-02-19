@@ -22,11 +22,12 @@ const socialLinks = [
 
 const NavLink = ({ href, children }) => {
   return (
+   
     <Link
       to={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="group relative inline-block overflow-hidden font-oswald text-3xl font-bold tracking-wide"
+      className="group relative inline-block overflow-hidden font-oswald text-4xl font-bold tracking-wide"
     >
       {/* Default Text */}
       <span className="block text-[#1a1a1a] transition-colors duration-300 group-hover:text-transparent">
@@ -53,8 +54,10 @@ const NavLink = ({ href, children }) => {
       >
         {children}
       </span>
-    </Link>
-  );
+      </Link>
+      
+      );
+   
 };
 
 
@@ -123,33 +126,33 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer className="relative w-full flex flex-col overflow-hidden min-h-screen bg-white font-oswald">
+    <footer className="relative w-full flex flex-col overflow-hidden min-h-screen rounded-t-4xl bg-amber-100 font-oswald">
 
       {/* TOP SECTION */}
       <div className="flex justify-between items-start px-20 pt-14 pb-8 flex-wrap gap-10">
 
         {/* LEFT */}
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-6 font-bold text-m">
 
           <div>
-            <p className="uppercase text-xl font-bold tracking-wide text-[#b8750a]">
+            <p className="uppercase text-3xl font-bold tracking-wide text-[#b8750a]">
               Phone
             </p>
-            <ContactLink href="#">+91 9987726922</ContactLink>
+            <ContactLink  href="#">+91 9987726922</ContactLink>
           </div>
 
           <div>
-            <p className="uppercase text-xl font-bold tracking-wide text-[#b8750a]">
+            <p className="uppercase text-3xl font-bold tracking-wide text-[#b8750a]">
               Email
             </p>
             <ContactLink href="#">hello@digitrend.in</ContactLink>
           </div>
 
           <div>
-            <p className="uppercase text-xl font-bold tracking-wide text-[#b8750a]">
+            <p className="uppercase text-3xl font-bold tracking-wide text-[#b8750a]">
               Address
             </p>
-            <p className="text-sm leading-loose text-[#222]">
+            <p className="text-m leading-loose text-[#222]">
               Deep Darshan Apartment,<br />
               Office No - 205 Karanjade,<br />
               Panvel - 410206
@@ -157,10 +160,10 @@ export default function Footer() {
           </div>
 
           <div>
-            <p className="uppercase text-xl font-bold tracking-wide text-[#b8750a]">
+            <p className="uppercase text-3xl font-bold tracking-wide text-[#b8750a]">
               Opening Hours
             </p>
-            <p className="text-sm leading-loose text-[#222]">
+            <p className="text-m leading-loose text-[#222]">
               Mon to Fri: 9.00am - 9.00pm<br />
               Sat & Sun: Closed
             </p>
@@ -192,32 +195,32 @@ export default function Footer() {
 
       {/* BIG TEXT */}
       <div
-        ref={wrapRef}
-        className="flex-1 flex items-end overflow-hidden w-full"
-      >
-        <span
-          ref={textRef}
-          style={{ fontSize: `${fontSize}px` }}
-          className="
-            block
-            w-full
-            uppercase
-            font-bold
-            leading-[0.83]
-            tracking-[-2px]
-            whitespace-nowrap
-            select-none
-            bg-gradient-to-b
-            from-[#f5b030]
-            via-[#b8700a]
-            to-[#4d2d02]
-            bg-clip-text
-            text-transparent
-          "
-        >
-          DiGi Trend
-        </span>
-      </div>
+  ref={wrapRef}
+  className="flex-1 flex items-center justify-center overflow-hidden w-full px-7 "
+>
+  <span
+    ref={textRef}
+    style={{ fontSize: `${fontSize}px` }}
+    className="
+      uppercase
+      font-bold
+      leading-[0.83]
+      tracking-[-2px]
+      whitespace-nowrap
+      select-none
+      bg-gradient-to-b
+      from-[#f5b030]
+      via-[#b8700a]
+      to-[#432701]
+      bg-clip-text
+      text-transparent
+      text-center
+    "
+  >
+    DiGi Trend
+  </span>
+</div>
+
 
       {/* BOTTOM BAR */}
       <div className="

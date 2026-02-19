@@ -4,15 +4,15 @@ import { useEffect, useRef, useState } from "react";
 const BRANDS = [
   {
     id: "inkspire",
-    bg: "#fff",
+    bg: "white",
     border: "#b5411a",
     label: "Inkspire\nTattoo",
     emoji: "🌹",
-    textColor: "#1a1a1a",
+    textColor: "black",
   },
   {
     id: "ancestral",
-    bg: "#fffce8",
+    bg: "white",
     border: "#c49a2a",
     label: "Ancestral\nHouse",
     emoji: "🏠",
@@ -20,7 +20,7 @@ const BRANDS = [
   },
   {
     id: "greenden",
-    bg: "#edf7ee",
+    bg: "white",
     border: "#2e7d32",
     label: "Greenden\nGym",
     emoji: "💪",
@@ -28,25 +28,17 @@ const BRANDS = [
   },
   {
     id: "kinography",
-    bg: "#fafafa",
+    bg: "white",
     border: "#aaaaaa",
     label: "Kinography",
     emoji: null,
     textColor: "#888",
     script: true,
   },
-  {
-    id: "vartawolf",
-    bg: "#fffbe6",
-    border: "#e6b800",
-    label: "Varta\nWolf",
-    emoji: "🐺",
-    textColor: "#7a5c00",
-    highlight: true,
-  },
+  
   {
     id: "beast",
-    bg: "#f5f0ff",
+    bg: "white",
     border: "#7c3aed",
     label: null,
     emoji: "🐉",
@@ -54,7 +46,7 @@ const BRANDS = [
   },
   {
     id: "studio",
-    bg: "#fff0f6",
+   bg: "white",
     border: "#d63384",
     label: "Studio\nBloom",
     emoji: "🌸",
@@ -62,7 +54,7 @@ const BRANDS = [
   },
   {
     id: "apexlabs",
-    bg: "#eff6ff",
+    bg: "white",
     border: "#1d4ed8",
     label: "Apex\nLabs",
     emoji: "⚡",
@@ -70,7 +62,7 @@ const BRANDS = [
   },
   {
     id: "terra",
-    bg: "#fdf6ee",
+    bg: "white",
     border: "#92400e",
     label: "Terra\nRoots",
     emoji: "🌿",
@@ -78,7 +70,7 @@ const BRANDS = [
   },
   {
     id: "nova",
-    bg: "#111",
+    bg: "white",
     border: "#f97316",
     label: "Nova\nWorks",
     emoji: "🚀",
@@ -87,15 +79,16 @@ const BRANDS = [
 ];
 
 // ─── Snake / wave parameters ─────────────────────────────────────────────────
-// The snake path: items are evenly spaced along a sine curve.
-// As the whole thing scrolls left, each item's x determines its y via sin(x).
-const SPACING   = 148;   // px between item centres along x-axis
-const AMPLITUDE = 100;   // px half-height of the snake
-const WAVELENGTH = 750;  // px for one full S-curve cycle (lower = tighter snake)
-const SPEED     = 0.9;   // px per frame
-const BASE_SIZE = 80;    // px – size at the trough
-const PEAK_SIZE = 118;   // px – size at the crest (biggest)
-const HEIGHT    = 320;   // container height
+// Horizontal cylinder: wide & short (pill lying on its side)
+const CARD_W    = 128;   // px – wide  (the cylinder's length)
+const CARD_H    = 80;    // px – short (the cylinder's diameter)
+const SPACING   = 128; // no gap — spacing == card width
+const AMPLITUDE = 100;
+const WAVELENGTH = 750;
+const SPEED     = 0.9;
+const BASE_SIZE = 80;
+const PEAK_SIZE = 118;
+const HEIGHT    = 300;
 
 export default function SpiralBrands() {
   const containerRef = useRef(null);
@@ -126,41 +119,40 @@ export default function SpiralBrands() {
       const nodes = container.querySelectorAll(".snake-item");
       nodes.forEach((node) => {
         const baseX = parseFloat(node.dataset.base);
-        // world-x scrolls left
         const wx = baseX - offsetRef.current;
 
-        // Wrap x into view: keep items cycling seamlessly
-        // The display x is wx mod-shifted so items re-enter from the right
-        let dx = wx % totalW;
-        if (dx < -SPACING) dx += totalW;
+        // let dx = wx % totalW;
+        // if (dx < -SPACING) dx += totalW;
+          let dx = wx;
+
+while (dx < -SPACING) dx += totalW;
+while (dx > totalW) dx -= totalW;
 
         const screenX = dx;
 
-        // Snake y: sine of screen position
-        const sineVal = Math.sin((screenX / WAVELENGTH) * Math.PI * 2);   // -1..1
+        const sineVal = Math.sin((screenX / WAVELENGTH) * Math.PI * 2);
         const y = centerY + sineVal * AMPLITUDE;
 
-        // Size: biggest at crest (sineVal=1), smallest at trough (sineVal=-1)
-        const t    = (sineVal + 1) / 2;   // 0..1
+        const t = 0.3;
         const size = BASE_SIZE + t * (PEAK_SIZE - BASE_SIZE);
+        const scale = size / BASE_SIZE;
 
-        // Rotation follows the slope of the sine curve (tangent angle)
+        const w = CARD_W * scale;
+        const h = CARD_H * scale;
+
         const dydx = Math.cos((screenX / WAVELENGTH) * Math.PI * 2) * (Math.PI * 2 / WAVELENGTH) * AMPLITUDE;
-        const angle = Math.atan(dydx) * (180 / Math.PI) * 0.55; // soften a bit
+        const angle = Math.atan(dydx) * (180 / Math.PI) * 0.55;
 
-        // Opacity: a touch dim at trough
         const opacity = 0.65 + t * 0.35;
-
-        // z-index: items at crest appear in front
         const zIndex = Math.round(t * 20) + 1;
 
-        if (screenX < -(size + 10) || screenX > cw + size + 10) {
+        if (screenX < -(w + 10) || screenX > cw + w + 10) {
           node.style.visibility = "hidden";
         } else {
           node.style.visibility = "visible";
-          node.style.width    = `${size}px`;
-          node.style.height   = `${size}px`;
-          node.style.transform = `translate(${screenX - size / 2}px, ${y - size / 2}px) rotate(${angle}deg)`;
+          node.style.width    = `${w}px`;
+          node.style.height   = `${h}px`;
+          node.style.transform = `translate(${screenX - w / 2}px, ${y - h / 2}px) rotate(${angle}deg)`;
           node.style.zIndex   = zIndex;
           node.style.opacity  = opacity;
         }
@@ -173,7 +165,6 @@ export default function SpiralBrands() {
     return () => cancelAnimationFrame(rafRef.current);
   }, [cw]);
 
-  // Build enough copies to fill screen × 2
   const totalW  = BRANDS.length * SPACING;
   const copies  = Math.ceil((cw * 2.5) / totalW) + 2;
   const allItems = [];
@@ -198,14 +189,14 @@ export default function SpiralBrands() {
         style={{
           position: "absolute", inset: 0, pointerEvents: "none",
           backgroundImage: "radial-gradient(#bbb 1px, transparent 1px)",
-          backgroundSize: "24px 24px",
+          backgroundSize: "40px 40px",
           opacity: 0.35,
         }}
       />
 
       {/* heading */}
       <p style={{
-        margin: 0, padding: "28px 0 4px",
+        margin: 0, padding: "28px 0 4px 8px",
         textAlign: "center",
         fontFamily: "Georgia, serif",
         fontSize: 11,
@@ -230,12 +221,7 @@ export default function SpiralBrands() {
         {allItems.map((item) => (
           <BrandCard key={item.uid} item={item} />
         ))}
-
-       
-        
       </div>
-
-     
     </div>
   );
 }
@@ -245,6 +231,9 @@ function BrandCard({ item }) {
   const isScript = item.script;
   const isHighlight = item.highlight;
 
+  const baseBg = isHighlight ? "white" : "white";
+  const baseBorder = isHighlight ? "white" :"white";
+
   return (
     <div
       className="snake-item"
@@ -252,29 +241,36 @@ function BrandCard({ item }) {
       style={{
         position: "absolute",
         top: 0, left: 0,
-        width: BASE_SIZE,
-        height: BASE_SIZE,
+        width: CARD_W,
+        height: CARD_H,
         visibility: "hidden",
-        willChange: "transform, width, height",
-        // rounded square — like the video
-        borderRadius: "18px",
-        border: `2.5px solid ${item.border}`,
-        background: item.bg,
-        boxShadow: "0 4px 18px rgba(0,0,0,0.13), 0 1px 4px rgba(0,0,0,0.08)",
+        // ── Horizontal cylinder: pill shape lying on its side ──
+        // Use CARD_H as the borderRadius value — creates perfect semicircle end caps
+        borderRadius: `${CARD_H}px`,
+       // border: `2.5px solid ${baseBorder}`,
+        backgroundColor: baseBg,
+        // Top-to-bottom gradient = horizontal cylinder shading
+        // Bright top highlight, dark bottom shadow → looks like a tube viewed from the front
+        backgroundImage: `linear-gradient(
+          to bottom,
+          rgba(255,255,255,0.62) 0%,
+          rgba(255,255,255,0.18) 5%,
+          transparent 0%,
+          rgba(0,0,0,0.10) 74%,
+          rgba(0,0,0,0.26) 100%
+        )`,
         display: "flex",
-        flexDirection: "column",
+        flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
-        padding: 6,
+        padding: "0 14px",
         boxSizing: "border-box",
         overflow: "hidden",
-        gap: 2,
-        // highlight items get a yellow/glow bg (like in the video)
-        ...(isHighlight ? { background: "#ffe740", border: "2.5px solid #d4a000" } : {}),
+        gap: 6,
       }}
     >
       {item.emoji && (
-        <span style={{ fontSize: "calc(var(--sz, 30px))", lineHeight: 1, display: "block" }}>
+        <span style={{ fontSize: 20, lineHeight: 1, display: "block", flexShrink: 0 }}>
           {item.emoji}
         </span>
       )}
@@ -284,11 +280,11 @@ function BrandCard({ item }) {
             fontFamily: isScript
               ? "'Brush Script MT', cursive"
               : "Georgia, serif",
-            fontSize: isScript ? 13 : 8.5,
+            fontSize: isScript ? 11 : 7.5,
             fontWeight: isScript ? 400 : 700,
-            color: isHighlight ? "#7a5c00" : item.textColor,
-            textAlign: "center",
-            lineHeight: 1.25,
+            color: isHighlight ? "#000" : item.textColor,
+            textAlign: "left",
+            lineHeight: 1.3,
             whiteSpace: "pre-line",
             letterSpacing: isScript ? 0.5 : 0.8,
           }}

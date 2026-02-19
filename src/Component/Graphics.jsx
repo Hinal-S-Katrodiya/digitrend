@@ -1,105 +1,209 @@
-import React from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 
-export default function DesignShowcase() {
-  const images = [
-    "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9",
-    "https://images.unsplash.com/photo-1492724441997-5dc865305da7",
-    "https://images.unsplash.com/photo-1509042239860-f550ce710b93",
-    "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2",
-    "https://images.unsplash.com/photo-1556228720-195a672e8a03",
-    "https://images.unsplash.com/photo-1542831371-29b0f74f9713",
-    "https://images.unsplash.com/photo-1511920170033-f8396924c348",
-  ];
+const IMAGES = [
+  "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=600&h=800&fit=crop",
+  "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=600&h=800&fit=crop",
+  "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=600&h=800&fit=crop",
+  "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&h=800&fit=crop",
+  "https://images.unsplash.com/photo-1518173946687-a1e0e2a4e99c?w=600&h=800&fit=crop",
+  "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&h=800&fit=crop",
+  "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=600&h=800&fit=crop",
+  "https://images.unsplash.com/photo-1494500764479-0c8f2919a3d8?w=600&h=800&fit=crop",
+  "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=600&h=800&fit=crop",
+  "https://images.unsplash.com/photo-1465056836900-8f1e4e0c1307?w=600&h=800&fit=crop",
+  "https://images.unsplash.com/photo-1500534314263-e9a743e3b76a?w=600&h=800&fit=crop",
+  "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=600&h=800&fit=crop",
+];
+
+const CARD_WIDTH = 220;
+const CARD_GAP = 18;
+const CARD_TOTAL = CARD_WIDTH + CARD_GAP;
+const SETS = 5; // repeat images this many times for infinite feel
+
+function CurvedImageScroll() {
+  const containerRef = useRef(null);
+  const [containerWidth, setContainerWidth] = useState(0);
+  const scrollX = useMotionValue(0);
+  const springX = useSpring(scrollX, { damping: 30, stiffness: 200, mass: 0.5 });
+  const isDragging = useRef(false);
+  const startX = useRef(0);
+  const startScroll = useRef(0);
+
+  const allImages = Array.from({ length: SETS }, () => IMAGES).flat();
+  const singleSetWidth = IMAGES.length * CARD_TOTAL;
+
+  useEffect(() => {
+    const measure = () => {
+      if (containerRef.current) {
+        setContainerWidth(containerRef.current.offsetWidth);
+      }
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
+
+  // Start in the middle set so we can scroll both directions
+  useEffect(() => {
+    if (containerWidth > 0) {
+      const middleSet = Math.floor(SETS / 2);
+      scrollX.set(middleSet * singleSetWidth);
+    }
+  }, [containerWidth, singleSetWidth, scrollX]);
+
+  // Infinite loop: when we scroll too far left or right, jump to the middle set
+  useEffect(() => {
+    const unsubscribe = scrollX.on("change", (v) => {
+      const minBound = singleSetWidth * 0.5;
+      const maxBound = singleSetWidth * (SETS - 1.5);
+      const middleOffset = Math.floor(SETS / 2) * singleSetWidth;
+
+      if (v < minBound) {
+        const diff = v - minBound;
+        scrollX.jump(middleOffset + diff);
+      } else if (v > maxBound) {
+        const diff = v - maxBound;
+        scrollX.jump(middleOffset + diff);
+      }
+    });
+    return unsubscribe;
+  }, [scrollX, singleSetWidth]);
+
+  const handleWheel = useCallback(
+    (e) => {
+      e.preventDefault();
+      const delta = e.deltaX || e.deltaY;
+      if (delta <= 0) return;
+      const current = scrollX.get();
+      scrollX.set(current + delta);
+    },
+    [scrollX]
+  );
+
+  const handlePointerDown = useCallback(
+    (e) => {
+      isDragging.current = true;
+      startX.current = e.clientX;
+      startScroll.current = scrollX.get();
+      e.currentTarget.setPointerCapture(e.pointerId);
+    },
+    [scrollX]
+  );
+
+  const handlePointerMove = useCallback(
+    (e) => {
+      if (!isDragging.current) return;
+      const diff = startX.current - e.clientX;
+      if (diff <= 0) return;
+      scrollX.set(startScroll.current + diff);
+    },
+    [scrollX]
+  );
+
+  const handlePointerUp = useCallback(() => {
+    isDragging.current = false;
+  }, []);
 
   return (
-    <div className="min-h-screen w-full flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8">
-
-      {/* Top Text Section */}
-      <h1 className="text-5xl md:text-7xl font-semibold text-gray-900 text-center mb-6">
+    <>
+      <div className="mt-30">
+          <h1 className="text-5xl md:text-7xl font-semibold text-gray-900 text-center mb-6">
         Design to Stare
       </h1>
 
-      <p className="text-gray-500 text-center max-w-3xl mb-20 text-lg">
+      <p className="text-gray-500 text-center max-w-3xl ml-70 mb-10 text-lg">
         We create the most stunning graphic designs for your social media,
         websites, branding, or literally anything. They are just mind-blowing.
       </p>
-
-      {/* 3D Container */}
-      <div
-        className="flex items-center justify-center w-full "
-        style={{ perspective: "1400px" }}
-      >
-        <div className="flex items-center relative">
-
-          {/* LEFT BIG */}
-          <Card
-            img={images[0]}
-            transform="rotateY(-50deg) translateX(-220px) scale(1.3)"
-            z="40"
-          />
-
-          {/* LEFT MID */}
-          <Card
-            img={images[1]}
-            transform="rotateY(-35deg) translateX(-140px) scale(1.15)"
-            z="30"
-          />
-
-          {/* LEFT SMALL */}
-          <Card
-            img={images[2]}
-            transform="rotateY(-15deg) translateX(-60px) scale(0.95)"
-            z="20"
-          />
-
-          {/* CENTER SMALLEST */}
-          <Card
-            img={images[3]}
-            transform="rotateY(0deg) scale(0.85)"
-            z="10"
-          />
-
-          {/* RIGHT SMALL */}
-          <Card
-            img={images[4]}
-            transform="rotateY(15deg) translateX(60px) scale(0.95)"
-            z="20"
-          />
-
-          {/* RIGHT MID */}
-          <Card
-            img={images[5]}
-            transform="rotateY(35deg) translateX(140px) scale(1.15)"
-            z="30"
-          />
-
-          {/* RIGHT BIG */}
-          <Card
-            img={images[6]}
-            transform="rotateY(50deg) translateX(220px) scale(1.3)"
-            z="40"
-          />
-
-        </div>
       </div>
-    </div>
+    <div className="w-full overflow-hidden pb-16 select-none" style={{ touchAction: "none" }}>
+      <div
+        ref={containerRef}
+        className="relative w-full overflow-hidden cursor-grab active:cursor-grabbing"
+        onWheel={handleWheel}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerUp}
+        style={{ height: 460 }}
+      >
+        <motion.div
+          className="flex items-center absolute left-0 top-0 h-full"
+          style={{
+            x: useTransform(springX, (v) => -v),
+            gap: CARD_GAP,
+          }}
+        >
+          {allImages.map((src, i) => (
+            <ImageCard
+              key={i}
+              src={src}
+              index={i}
+              scrollX={springX}
+              containerWidth={containerWidth}
+            />
+          ))}
+        </motion.div>
+      </div>
+      </div>
+      </>
   );
 }
 
-function Card({ img, transform, z }) {
+function ImageCard({ src, index, scrollX, containerWidth }) {
+  const cardCenter = index * CARD_TOTAL + CARD_WIDTH / 2;
+
+  // Side images are big (1.1), center image is small (0.75)
+  const scale = useTransform(scrollX, (sv) => {
+    const viewCenter = sv + containerWidth / 2;
+    const dist = Math.abs(cardCenter - viewCenter);
+    const maxDist = containerWidth / 2;
+    const normalized = Math.min(dist / maxDist, 1);
+    return 0.75 + normalized * 0.35;
+  });
+
+  const y = useTransform(scrollX, () => 0);
+
+  // Depth effect: center has less opacity, sides are fully visible
+  const opacity = useTransform(scrollX, (sv) => {
+    const viewCenter = sv + containerWidth / 2;
+    const dist = Math.abs(cardCenter - viewCenter);
+    const maxDist = containerWidth / 2;
+    const normalized = Math.min(dist / maxDist, 1);
+    return 0.6 + normalized * 0.4;
+  });
+
+  const borderRadius = useTransform(scrollX, (sv) => {
+    const viewCenter = sv + containerWidth / 2;
+    const dist = Math.abs(cardCenter - viewCenter);
+    const maxDist = containerWidth / 2;
+    const normalized = Math.min(dist / maxDist, 1);
+    const radius = 12 + (1 - normalized) * 16;
+    return `${radius}px`;
+  });
+
   return (
-    <div
-      className="w-30 h-40 rounded-3xl overflow-hidden shadow-[0_30px_80px_rgba(0,0,0,0.15)] transition-all duration-500"
+    <motion.div
+      className="flex-shrink-0 overflow-hidden shadow-lg"
       style={{
-        transform: transform,
-        zIndex: z,
+        width: CARD_WIDTH,
+        height: 320,
+        scale,
+        y,
+        opacity,
+        borderRadius,
+        transformOrigin: "center center",
       }}
     >
       <img
-        src={`${img}?auto=format&fit=crop&w=800&q=80`}
-        alt="design"
-        className="w-full h-full object-cover"
+        src={src}
+        alt=""
+        className="w-full h-full object-cover pointer-events-none"
+        draggable={false}
       />
-    </div>
+    </motion.div>
   );
 }
+
+export default CurvedImageScroll;

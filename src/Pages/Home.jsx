@@ -6,7 +6,7 @@ import Third from '../Component/Third'
 import { Bubbles } from 'lucide-react'
 import FeatureCards from '../Component/Feature'
 import SpiralBrands from '../Component/Spiral'
-import DesignShowcase from '../Component/Graphics'
+import CurvedImageScroll from '../Component/Graphics'
 import ServicesComponent from '../Component/Service'
 import OurWork from '../Component/OurWork'
 import ReviewSection from '../Component/Review'
@@ -28,7 +28,7 @@ function Home() {
       <Third /> 
       <FeatureCards />
       <SpiralBrands />
-      <DesignShowcase /> 
+      <CurvedImageScroll/> 
       <ServicesComponent />
       <OurWork />
       <ReviewSection />

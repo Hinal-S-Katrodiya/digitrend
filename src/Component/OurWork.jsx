@@ -66,7 +66,7 @@ export default function OurWork() {
   return (
     <div
       ref={containerRef}
-      className="relative h-[220vh] bg-white"
+      className="relative h-[120vh] bg-white"
     >
       <div className=" sticky text-5xl md:text-7xl font-semibold text-gray-900 text-center ">Our Best Work</div>
       <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden">
