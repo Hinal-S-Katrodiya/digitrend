@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { MapPin, Phone, Mail, Facebook, Twitter, Instagram } from "lucide-react";
 
-const Contact = () => {
+const Contact = ({ id }) => {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
 
   const handleChange = (e) => {
@@ -15,7 +15,7 @@ const Contact = () => {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 py-12"
+    <div id={id} className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 py-12"
       style={{ background: "var(--gradient-bg)" }}
     >
       {/* Floating decorative dots */}
@@ -108,7 +108,7 @@ const Contact = () => {
         </svg>
 
         {/* Card content */}
-        <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-6 p-10 md:p-14 min-h-[500px]">
+        <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-10 p-6 sm:p-10 md:p-14 min-h-[500px]">
           {/* Left - Form */}
           <div>
             <motion.h1
@@ -134,14 +134,14 @@ const Contact = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
               >
-                <label className="block text-xs font-bold text-muted-foreground mb-1 pr-65">Your Name</label>
+                <label className="block text-xs font-bold text-muted-foreground mb-1">Your Name</label>
                 <input
                   type="text"
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
                   placeholder="Name"
-                  className="w-full  border-input bg-gray-100 rounded-2xl py-2 text-sm text-card-foreground outline-none focus:border-primary transition-colors placeholder:pl-2.5"
+                  className="w-full border-input bg-gray-100 rounded-2xl py-2 px-4 text-sm text-card-foreground outline-none focus:border-primary transition-colors placeholder:text-muted-foreground/50"
                 />
               </motion.div>
 
@@ -150,14 +150,14 @@ const Contact = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 }}
               >
-                <label className="block text-xs font-bold text-muted-foreground mb-1 pr-65 ">Your Email</label>
+                <label className="block text-xs font-bold text-muted-foreground mb-1">Your Email</label>
                 <input
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                   placeholder="E-mail"
-                  className="w-full border-input bg-gray-100 py-2 text-sm text-card-foreground outline-none focus:border-primary transition-colors rounded-2xl placeholder:pl-2.5"
+                  placeholder="E-mail"
+                  className="w-full border-input bg-gray-100 py-2 px-4 text-sm text-card-foreground outline-none focus:border-primary transition-colors rounded-2xl placeholder:text-muted-foreground/50"
                 />
               </motion.div>
 
@@ -166,14 +166,14 @@ const Contact = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.7 }}
               >
-                <label className="block text-xs rounded-2xl font-bold pr-65 text-muted-foreground mb-1">Your Message</label>
+                <label className="block text-xs rounded-2xl font-bold text-muted-foreground mb-1">Your Message</label>
                 <textarea
                   name="message"
                   value={formData.message}
                   onChange={handleChange}
                   rows={3}
                   placeholder="Type something if you want..."
-                  className="w-full  rounded-md bg-gray-100 p-3 text-sm text-card-foreground outline-none focus:border-primary transition-colors resize-none placeholder:text-muted-foreground/50 "
+                  className="w-full rounded-2xl bg-gray-100 p-4 text-sm text-card-foreground outline-none focus:border-primary transition-colors resize-none placeholder:text-muted-foreground/50"
                 />
               </motion.div>
 

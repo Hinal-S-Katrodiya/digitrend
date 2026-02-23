@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import {
   motion,
   useScroll,
@@ -46,7 +46,7 @@ const PROJECTS = [
   },
 ];
 
-export default function OurWork() {
+export default function OurWork({ id }) {
   const containerRef = useRef(null);
 
   const { scrollYProgress } = useScroll({
@@ -60,11 +60,11 @@ export default function OurWork() {
   });
 
   const rotateY = useTransform(smooth, [0, 1], [0, -280]);
-
   const yMove = useTransform(smooth, [0, 1], [0, -180]);
 
   return (
     <div
+      id={id}
       ref={containerRef}
       className="relative h-[120vh] bg-white"
     >
@@ -99,16 +99,16 @@ export default function OurWork() {
                   className="absolute"
                   style={{
                     transform: `
-                      rotateY(${angle}deg)
-                      translateY(${vertical}px)
-                    `,
+                        rotateY(${angle}deg)
+                        translateY(${vertical}px)
+                      `,
                     transformStyle: "preserve-3d",
                   }}
                 >
                   <div
                     className="w-[260px] h-[260px] rounded-xl overflow-hidden shadow-xl"
                     style={{
-                      transform: "translateZ(360px)", // 🔥 reduced radius
+                      transform: "translateZ(360px)",
                       backfaceVisibility: "hidden",
                     }}
                   >

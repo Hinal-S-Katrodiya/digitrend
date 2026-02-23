@@ -16,8 +16,8 @@ export default function Third() {
     },
   };
 
- const line1 = "Websites that Sells & ";
-const line2 = "Ads that Convert";
+  const line1 = "Websites that Sells & ";
+  const line2 = "Ads that Convert";
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20, filter: "blur(10px)" },
@@ -50,19 +50,19 @@ const line2 = "Ads that Convert";
           clipPath:
             "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)",
         }}
-        className="absolute top-24 left-46 w-38 h-38 bg-gradient-to-br from-indigo-500/60 to-blue-400/40 backdrop-blur-3xl border border-white/40 shadow-2xl flex items-center justify-center text-white font-semibold text-xl"
+        className="absolute top-10 left-10 md:top-24 md:left-46 w-24 h-24 md:w-38 md:h-38 bg-gradient-to-br from-indigo-500/60 to-blue-400/40 backdrop-blur-3xl border border-white/40 shadow-2xl flex items-center justify-center text-white font-semibold text-lg md:text-xl"
       >
         Timeless
       </motion.div>
 
       {/* Bubble 2 - Creative */}
       <motion.div
-        animate={{ y: [0, -40, 0], rotate: [0, 6, 0] }}
+        animate={{ y: [0, -20, 0], rotate: [0, 6, 0] }}
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute bottom-62 right-124 w-38 h-38
+        className="absolute bottom-10 right-10 md:bottom-50 md:right-120 w-24 h-24 md:w-38 md:h-38
         bg-gradient-to-br from-pink-500/60 to-purple-500/40
         backdrop-blur-3xl border border-white/40 shadow-2xl
-        flex items-center justify-center text-white font-semibold text-2xl
+        flex items-center justify-center text-white font-semibold text-lg md:text-2xl
         rounded-[40%_60%_45%_55%/50%_40%_60%_50%]"
       >
         Creative
@@ -72,7 +72,7 @@ const line2 = "Ads that Convert";
       <motion.div
         animate={{ y: [0, -15, 0], rotate: [0, -5, 0] }}
         transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-1/3 right-40 w-32 h-32 flex items-center justify-center"
+        className="absolute top-1/2 -translate-y-1/2 right-10 md:top-1/3 md:right-40 w-20 h-20 md:w-32 md:h-32 flex items-center justify-center"
       >
         <svg viewBox="0 0 200 200" className="w-full h-full">
           {(() => {
@@ -132,36 +132,36 @@ const line2 = "Ads that Convert";
 
         <motion.h1 variants={itemVariants}>
           <div
-            className="  font-oswald
+            className="font-oswald
   font-normal
   uppercase
-  text-left
+  text-center md:text-left
   leading-[100%]
-  tracking-[-13px]
-  text-[130px]
-  scale-y-140
+  tracking-tight md:tracking-[-13px]
+  text-6xl sm:text-8xl md:text-9xl lg:text-[130px]
+  scale-y-110 md:scale-y-140
   
    text-blue-900"
           >
             We Create
           </div>
-         
+
         </motion.h1>
-      
-      
-        
-       <motion.h1 className="text-gray-800 ml-8 mt-5 mb-5 text-center pt-1.5 text-6xl font-semibold leading-[95%]">
-      {[line1, line2].map((line, lineIndex) => (
-        <div key={lineIndex}>
-          {line.split("").map((letter, index) => (
-            <span key={index} className="inline-block">
-              {letter === " " ? "\u00A0" : letter}
-            </span>
+
+
+
+        <motion.h1 className="text-gray-800 md:ml-8 mt-5 mb-5 text-center pt-1.5 text-3xl sm:text-5xl md:text-6xl font-semibold leading-[95%] px-4">
+          {[line1, line2].map((line, lineIndex) => (
+            <div key={lineIndex}>
+              {line.split("").map((letter, index) => (
+                <span key={index} className="inline-block">
+                  {letter === " " ? "\u00A0" : letter}
+                </span>
+              ))}
+            </div>
           ))}
-        </div>
-      ))}
-    </motion.h1>
-        
+        </motion.h1>
+
         <motion.button
           variants={itemVariants}
           whileHover={{ scale: 1.05 }}

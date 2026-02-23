@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import StarburstBubble from './StarBubble';
 
-const ServicesComponent = () => {
+const ServicesComponent = ({ id }) => {
   const [expandedService, setExpandedService] = useState(null);
 
   const services = [
@@ -96,46 +96,41 @@ const ServicesComponent = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-white py-20 px-4 sm:px-6 lg:px-8">
+    <div id={id} className="min-h-screen w-full bg-white py-20 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-7xl mx-auto">
         {/* Header Section */}
-          <section className="relative  flex items-center justify-center px-6 py-20 overflow-hidden">
-      
-      <div className="relative text-center">
+        <section className="relative  flex items-center justify-center px-6 py-20 overflow-hidden">
 
-        {/* First Line */}
-        <h1 className="text-[50px] sm:text-[70px] md:text-[100px] lg:text-[100px] 
+          <div className="relative text-center">
+
+            {/* First Line */}
+            <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-[100px] 
                        font-extrabold leading-[0.9] tracking-tight text-black">
-          What we&apos;re
-        </h1>
+              What we&apos;re
+            </h1>
 
-        {/* Second Line */}
-        <h2 className="text-[50px] sm:text-[70px] md:text-[100px] lg:text-[100px] 
+            {/* Second Line */}
+            <h2 className="text-4xl sm:text-5xl md:text-7xl lg:text-[100px] 
                        font-extrabold leading-[0.9] tracking-tight text-black">
-          absolutely killer at
-        </h2>
+              absolutely killer at
+            </h2>
 
-        {/* Yellow Bubble */}
-        <div className="absolute 
+            {/* Yellow Bubble */}
+            <div className="absolute 
                         top-[52%] 
                         left-[42%] 
+                        md:left-[42%]
                         -translate-x-1/2 
                         -translate-y-1/2 
                         rotate-[-12deg] ">
-          
-          <div className="relative w-16 h-20 md:w-16 md:h-16 ">
-            
-            {/* Star Shape */}
-          <StarburstBubble/>
 
-            {/* Services Text */}
-            
-             
+              <div className="relative w-12 h-14 md:w-16 md:h-16 ">
+                <StarburstBubble />
+              </div>
+            </div>
+
           </div>
-        </div>
-
-      </div>
-    </section>
+        </section>
         {/* Services Accordion */}
         <div className="space-y-6">
           {services.map((service) => (
@@ -156,7 +151,7 @@ const ServicesComponent = () => {
                     {service.subtitle}
                   </p>
                 </div>
-                
+
                 {/* Plus/Minus Icon */}
                 <div className="ml-6 flex-shrink-0">
                   <div className="w-12 h-12 flex items-center justify-center">
@@ -200,17 +195,16 @@ const ServicesComponent = () => {
 
               {/* Expandable Content */}
               <div
-                className={`overflow-hidden transition-all duration-500 ease-in-out ${
-                  expandedService === service.id
-                    ? 'max-h-[1000px] opacity-100'
-                    : 'max-h-0 opacity-0'
-                }`}
+                className={`overflow-hidden transition-all duration-500 ease-in-out ${expandedService === service.id
+                  ? 'max-h-[1000px] opacity-100'
+                  : 'max-h-0 opacity-0'
+                  }`}
               >
                 <div className="px-8 sm:px-12 py-8">
                   <p className="text-lg text-gray-800 mb-6 leading-relaxed">
                     {service.description}
                   </p>
-                  
+
                   <div className="mt-6">
                     <h4 className="text-xl font-bold text-black mb-4">What We Offer:</h4>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

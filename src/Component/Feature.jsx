@@ -24,16 +24,16 @@ const features = [
   },
 ];
 
-const FeatureCards = () => {
+const FeatureCards = ({ id }) => {
   return (
-    <section className="w-full py-24 px-4 sm:px-6 lg:px-8 mt- -1.5" >
-      <div className="w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-14 md:gap-10">
+    <section id={id} className="w-full py-16 sm:py-20 md:py-24 px-4 sm:px-6 lg:px-8 mt--1.5" >
+      <div className="w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-10">
         {features.map((feature) => (
           <div key={feature.title} className="flex flex-col items-center text-center">
             <img
               src={feature.image}
               alt={feature.title}
-              className="w-60 h-60 object-contain mb-8 transition-transform duration-500 ease-in-out hover:scale-110 "
+              className="w-48 h-48 md:w-60 md:h-60 object-contain mb-8 transition-transform duration-500 ease-in-out hover:scale-110 "
             />
             <h3
               className="text-2xl md:text-[1.7rem] font-extrabold text-gray-900 mb-3 leading-snug"
@@ -41,7 +41,7 @@ const FeatureCards = () => {
             >
               {feature.title}
             </h3>
-            <p className="text-gray-500 text-[0.95rem] leading-relaxed max-w-[280px]">
+            <p className="text-gray-500 text-[0.95rem] leading-relaxed max-w-[280px] mx-auto">
               {feature.description}
             </p>
           </div>

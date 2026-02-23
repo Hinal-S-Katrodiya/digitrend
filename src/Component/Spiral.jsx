@@ -1,161 +1,89 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 
-// ─── Brand data ──────────────────────────────────────────────────────────────
+// ─── Brand data ─────────────────────────────────────────────
 const BRANDS = [
-  {
-    id: "inkspire",
-    bg: "white",
-    border: "#b5411a",
-    label: "Inkspire\nTattoo",
-    emoji: "🌹",
-    textColor: "black",
-  },
-  {
-    id: "ancestral",
-    bg: "white",
-    border: "#c49a2a",
-    label: "Ancestral\nHouse",
-    emoji: "🏠",
-    textColor: "#5c3d11",
-  },
-  {
-    id: "greenden",
-    bg: "white",
-    border: "#2e7d32",
-    label: "Greenden\nGym",
-    emoji: "💪",
-    textColor: "#1b5e20",
-  },
-  {
-    id: "kinography",
-    bg: "white",
-    border: "#aaaaaa",
-    label: "Kinography",
-    emoji: null,
-    textColor: "#888",
-    script: true,
-  },
-  
-  {
-    id: "beast",
-    bg: "white",
-    border: "#7c3aed",
-    label: null,
-    emoji: "🐉",
-    textColor: "#4c1d95",
-  },
-  {
-    id: "studio",
-   bg: "white",
-    border: "#d63384",
-    label: "Studio\nBloom",
-    emoji: "🌸",
-    textColor: "#9b1a52",
-  },
-  {
-    id: "apexlabs",
-    bg: "white",
-    border: "#1d4ed8",
-    label: "Apex\nLabs",
-    emoji: "⚡",
-    textColor: "#1e3a8a",
-  },
-  {
-    id: "terra",
-    bg: "white",
-    border: "#92400e",
-    label: "Terra\nRoots",
-    emoji: "🌿",
-    textColor: "#78350f",
-  },
-  {
-    id: "nova",
-    bg: "white",
-    border: "#f97316",
-    label: "Nova\nWorks",
-    emoji: "🚀",
-    textColor: "#f97316",
-  },
+  { id: "inkspire", label: "Inkspire\nTattoo", emoji: "🌹", textColor: "black" },
+  { id: "ancestral", label: "Ancestral\nHouse", emoji: "🏠", textColor: "#5c3d11" },
+  { id: "greenden", label: "Greenden\nGym", emoji: "💪", textColor: "#1b5e20" },
+  { id: "kinography", label: "Kinography", emoji: "🎥", textColor: "#888" },
+  { id: "beast", label: "Beast\nMode", emoji: "🐉", textColor: "#4c1d95" },
+  { id: "studio", label: "Studio\nBloom", emoji: "🌸", textColor: "#9b1a52" },
+  { id: "apexlabs", label: "Apex\nLabs", emoji: "⚡", textColor: "#1e3a8a" },
+  { id: "terra", label: "Terra\nRoots", emoji: "🌿", textColor: "#78350f" },
+  { id: "nova", label: "Nova\nWorks", emoji: "🚀", textColor: "#f97316" },
 ];
 
-// ─── Snake / wave parameters ─────────────────────────────────────────────────
-// Horizontal cylinder: wide & short (pill lying on its side)
-const CARD_W    = 128;   // px – wide  (the cylinder's length)
-const CARD_H    = 80;    // px – short (the cylinder's diameter)
-const SPACING   = 128; // no gap — spacing == card width
-const AMPLITUDE = 100;
-const WAVELENGTH = 750;
-const SPEED     = 0.9;
-const BASE_SIZE = 80;
-const PEAK_SIZE = 118;
-const HEIGHT    = 300;
+const SPEED = 1;        // Snake speed
+const AMPLITUDE = 60;   // Wave height
+const WAVELENGTH = 600; // Wave density
 
-export default function SpiralBrands() {
+export default function SpiralBrands({ id }) {
   const containerRef = useRef(null);
-  const offsetRef    = useRef(0);
-  const rafRef       = useRef(null);
-  const [cw, setCw]  = useState(1000);
+  const offsetRef = useRef(0);
+  const rafRef = useRef(null);
 
-  // Resize observer
+  const [dims, setDims] = useState({
+    cardW: 160,
+    cardH: 90,
+  });
+
+  // ─── Responsive sizing ────────────────────────────────────
   useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    setCw(el.offsetWidth);
-    const ro = new ResizeObserver(([e]) => setCw(e.contentRect.width));
-    ro.observe(el);
-    return () => ro.disconnect();
+    const update = () => {
+      const w = window.innerWidth;
+      let cardW = 160;
+      let cardH = 90;
+
+      if (w < 640) {
+        cardW = 110;
+        cardH = 65;
+      } else if (w < 1024) {
+        cardW = 140;
+        cardH = 80;
+      }
+
+      setDims({ cardW, cardH });
+    };
+
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
   }, []);
 
-  // Animation loop
+  // ─── Perfect Infinite Animation ───────────────────────────
   useEffect(() => {
-    const totalW = BRANDS.length * SPACING;
-    const centerY = HEIGHT / 2;
+    const totalItems = BRANDS.length * 3; // 🔥 3 sets
+    const totalW = totalItems * dims.cardW;
+    const centerY = (dims.cardH * 3) / 2;
 
     function tick() {
-      offsetRef.current = (offsetRef.current + SPEED) % totalW;
-      const container = containerRef.current;
-      if (!container) { rafRef.current = requestAnimationFrame(tick); return; }
+      offsetRef.current += SPEED;
 
-      const nodes = container.querySelectorAll(".snake-item");
-      nodes.forEach((node) => {
-        const baseX = parseFloat(node.dataset.base);
-        const wx = baseX - offsetRef.current;
+      const el = containerRef.current;
+      if (!el) return;
 
-        // let dx = wx % totalW;
-        // if (dx < -SPACING) dx += totalW;
-          let dx = wx;
+      const items = el.querySelectorAll(".sarpakar-item");
 
-while (dx < -SPACING) dx += totalW;
-while (dx > totalW) dx -= totalW;
+      items.forEach((node) => {
+        const index = parseFloat(node.dataset.index);
 
-        const screenX = dx;
+        let x = index * dims.cardW - offsetRef.current;
 
-        const sineVal = Math.sin((screenX / WAVELENGTH) * Math.PI * 2);
-        const y = centerY + sineVal * AMPLITUDE;
+        // 🔥 Perfect seamless wrap
+        while (x < -dims.cardW) x += totalW;
+        while (x >= totalW - dims.cardW) x -= totalW;
 
-        const t = 0.3;
-        const size = BASE_SIZE + t * (PEAK_SIZE - BASE_SIZE);
-        const scale = size / BASE_SIZE;
+        const rad = (x / WAVELENGTH) * Math.PI * 2;
+        const y = centerY + Math.sin(rad) * AMPLITUDE;
 
-        const w = CARD_W * scale;
-        const h = CARD_H * scale;
+        const slope =
+          (Math.cos(rad) * AMPLITUDE * (Math.PI * 2)) /
+          WAVELENGTH;
+        const angle = Math.atan(slope) * (180 / Math.PI);
 
-        const dydx = Math.cos((screenX / WAVELENGTH) * Math.PI * 2) * (Math.PI * 2 / WAVELENGTH) * AMPLITUDE;
-        const angle = Math.atan(dydx) * (180 / Math.PI) * 0.55;
-
-        const opacity = 0.65 + t * 0.35;
-        const zIndex = Math.round(t * 20) + 1;
-
-        if (screenX < -(w + 10) || screenX > cw + w + 10) {
-          node.style.visibility = "hidden";
-        } else {
-          node.style.visibility = "visible";
-          node.style.width    = `${w}px`;
-          node.style.height   = `${h}px`;
-          node.style.transform = `translate(${screenX - w / 2}px, ${y - h / 2}px) rotate(${angle}deg)`;
-          node.style.zIndex   = zIndex;
-          node.style.opacity  = opacity;
-        }
+        node.style.transform = `translate(${x}px, ${
+          y - dims.cardH / 2
+        }px) rotate(${angle}deg)`;
       });
 
       rafRef.current = requestAnimationFrame(tick);
@@ -163,135 +91,77 @@ while (dx > totalW) dx -= totalW;
 
     rafRef.current = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(rafRef.current);
-  }, [cw]);
-
-  const totalW  = BRANDS.length * SPACING;
-  const copies  = Math.ceil((cw * 2.5) / totalW) + 2;
-  const allItems = [];
-  for (let c = 0; c < copies; c++) {
-    BRANDS.forEach((b, i) => {
-      allItems.push({ ...b, uid: `${c}-${i}`, base: c * totalW + i * SPACING });
-    });
-  }
+  }, [dims]);
 
   return (
     <div
-      style={{
-        width: "100%",
-        background: "white",
-        position: "relative",
-        overflow: "hidden",
-        userSelect: "none",
-      }}
+      id={id}
+      className="w-full relative overflow-hidden py-16 select-none"
+      style={{ backgroundColor: "white" }}
     >
-      {/* dot-grid texture */}
+      {/* Background Pattern */}
       <div
+        className="absolute inset-0 pointer-events-none opacity-[0.5]"
         style={{
-          position: "absolute", inset: 0, pointerEvents: "none",
-          backgroundImage: "radial-gradient(#bbb 1px, transparent 1px)",
-          backgroundSize: "40px 40px",
-          opacity: 0.35,
+          backgroundImage: `
+            radial-gradient(circle, #e8e1d5 1.5px, transparent 1.5px),
+            radial-gradient(circle, #e8e1d5 1.5px, transparent 1.5px)
+          `,
+          backgroundPosition: "0 0, 10px 10px",
+          backgroundSize: "20px 20px",
         }}
       />
 
-      {/* heading */}
-      <p style={{
-        margin: 0, padding: "28px 0 4px 8px",
-        textAlign: "center",
-        fontFamily: "Georgia, serif",
-        fontSize: 11,
-        letterSpacing: 5,
-        color: "#a89880",
-        textTransform: "uppercase",
-        position: "relative", zIndex: 30,
-      }}>
-        Trusted Partners
-      </p>
+      <div className="text-center mb-10 relative z-10 px-4">
+        <p className="text-[24px] md:text-[30px] tracking-[0.4em] uppercase text-gray-400 mb-2">
+          Trusted Partners
+        </p>
+      </div>
 
-      {/* ── snake container ── */}
       <div
         ref={containerRef}
-        style={{
-          position: "relative",
-          width: "100%",
-          height: HEIGHT,
-          overflow: "hidden",
-        }}
+        className="relative w-full"
+        style={{ height: dims.cardH * 3 }}
       >
-        {allItems.map((item) => (
-          <BrandCard key={item.uid} item={item} />
+        {/* 🔥 3 Sets Rendered */}
+        {[...BRANDS, ...BRANDS, ...BRANDS].map((brand, i) => (
+          <BrandCard
+            key={`${brand.id}-${i}`}
+            brand={brand}
+            index={i}
+            dims={dims}
+          />
         ))}
       </div>
     </div>
   );
 }
 
-// ── Individual brand card ──────────────────────────────────────────────────────
-function BrandCard({ item }) {
-  const isScript = item.script;
-  const isHighlight = item.highlight;
-
-  const baseBg = isHighlight ? "white" : "white";
-  const baseBorder = isHighlight ? "white" :"white";
-
+// ─── Brand Card ─────────────────────────────────────────────
+function BrandCard({ brand, index, dims }) {
   return (
     <div
-      className="snake-item"
-      data-base={item.base}
+      className="sarpakar-item absolute top-0 left-0 flex items-center justify-center bg-white shadow-sm"
+      data-index={index}
       style={{
-        position: "absolute",
-        top: 0, left: 0,
-        width: CARD_W,
-        height: CARD_H,
-        visibility: "hidden",
-        // ── Horizontal cylinder: pill shape lying on its side ──
-        // Use CARD_H as the borderRadius value — creates perfect semicircle end caps
-        borderRadius: `${CARD_H}px`,
-       // border: `2.5px solid ${baseBorder}`,
-        backgroundColor: baseBg,
-        // Top-to-bottom gradient = horizontal cylinder shading
-        // Bright top highlight, dark bottom shadow → looks like a tube viewed from the front
-        backgroundImage: `linear-gradient(
-          to bottom,
-          rgba(255,255,255,0.62) 0%,
-          rgba(255,255,255,0.18) 5%,
-          transparent 0%,
-          rgba(0,0,0,0.10) 74%,
-          rgba(0,0,0,0.26) 100%
-        )`,
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "0 14px",
+        width: dims.cardW,
+        height: dims.cardH,
+        borderRadius: dims.cardH,
         boxSizing: "border-box",
-        overflow: "hidden",
-        gap: 6,
+        willChange: "transform",
       }}
     >
-      {item.emoji && (
-        <span style={{ fontSize: 20, lineHeight: 1, display: "block", flexShrink: 0 }}>
-          {item.emoji}
-        </span>
-      )}
-      {item.label && (
+      <div className="flex items-center gap-2">
+        {brand.emoji && (
+          <span className="text-xl md:text-2xl">{brand.emoji}</span>
+        )}
         <span
-          style={{
-            fontFamily: isScript
-              ? "'Brush Script MT', cursive"
-              : "Georgia, serif",
-            fontSize: isScript ? 11 : 7.5,
-            fontWeight: isScript ? 400 : 700,
-            color: isHighlight ? "#000" : item.textColor,
-            textAlign: "left",
-            lineHeight: 1.3,
-            whiteSpace: "pre-line",
-            letterSpacing: isScript ? 0.5 : 0.8,
-          }}
+          className="text-[9px] md:text-[11px] font-bold uppercase tracking-widest leading-none"
+          style={{ color: brand.textColor }}
         >
-          {item.label}
+          {brand.label}
         </span>
-      )}
+      </div>
     </div>
   );
 }

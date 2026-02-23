@@ -1,7 +1,7 @@
 import React from 'react'
 
 import Hero from '../Component/Hero'
-import Logo from '../Component/Logo'
+
 import Third from '../Component/Third'
 import { Bubbles } from 'lucide-react'
 import FeatureCards from '../Component/Feature'
@@ -20,25 +20,27 @@ import Contact from '../Component/Contact'
 
 function Home() {
   return (
-     <>
+    <>
       <Hero />
-       <div className="flex  items-center justify-center">
-      <Logo />
-      </div>  
-      <Third /> 
-      <FeatureCards />
-      <SpiralBrands />
-      <CurvedImageScroll/> 
-      <ServicesComponent />
-      <OurWork />
-      <ReviewSection />
-      <Contact/>
-      <Client />
-      <FAQSection />
-      <Footer/>
-      
-      
-          </>
+      <div className="flex  items-center justify-center">
+
+      </div>
+      <Third />
+      <section>
+        <FeatureCards id="features" />
+      </section>
+      <SpiralBrands id="partners" />
+      <CurvedImageScroll id="design" />
+      <ServicesComponent id="services" />
+      <OurWork id="work" />
+      <ReviewSection id="review" />
+      <Contact id="contact" />
+      <Client id ="client_talk"/>
+      <FAQSection id="faqs" />
+      <Footer />
+
+
+    </>
   )
 }
 

@@ -1,37 +1,51 @@
 import { useRef, useState, useEffect, useCallback } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 
-const IMAGES = [
-  "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=600&h=800&fit=crop",
-  "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=600&h=800&fit=crop",
-  "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=600&h=800&fit=crop",
-  "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&h=800&fit=crop",
-  "https://images.unsplash.com/photo-1518173946687-a1e0e2a4e99c?w=600&h=800&fit=crop",
-  "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&h=800&fit=crop",
-  "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=600&h=800&fit=crop",
-  "https://images.unsplash.com/photo-1494500764479-0c8f2919a3d8?w=600&h=800&fit=crop",
-  "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=600&h=800&fit=crop",
-  "https://images.unsplash.com/photo-1465056836900-8f1e4e0c1307?w=600&h=800&fit=crop",
-  "https://images.unsplash.com/photo-1500534314263-e9a743e3b76a?w=600&h=800&fit=crop",
-  "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=600&h=800&fit=crop",
+const MEDIA = [
+  { type: "image", url: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=600&h=800&fit=crop" },
+  { type: "video", url: "https://vjs.zencdn.net/v/oceans.mp4" },
+  { type: "image", url: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=600&h=800&fit=crop" },
+  { type: "video", url: "https://vjs.zencdn.net/v/oceans.mp4" },
+  { type: "image", url: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=600&h=800&fit=crop" },
+  { type: "video", url: "https://vjs.zencdn.net/v/oceans.mp4" },
+  { type: "image", url: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&h=800&fit=crop" },
+  { type: "video", url: "https://vjs.zencdn.net/v/oceans.mp4" },
+  { type: "image", url: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=600&h=800&fit=crop" },
+  { type: "video", url: "https://vjs.zencdn.net/v/oceans.mp4" },
 ];
 
-const CARD_WIDTH = 220;
-const CARD_GAP = 18;
-const CARD_TOTAL = CARD_WIDTH + CARD_GAP;
-const SETS = 5; // repeat images this many times for infinite feel
+const getCardDimensions = () => {
+  if (typeof window === "undefined")
+    return { width: 220, gap: 18, height: 320, containerHeight: 460 };
+
+  const w = window.innerWidth;
+  if (w < 640) return { width: 140, gap: 12, height: 200, containerHeight: 250 };
+  if (w < 1024) return { width: 180, gap: 15, height: 260, containerHeight: 380 };
+  return { width: 220, gap: 18, height: 320, containerHeight: 460 };
+};
+
+const AUTO_SCROLL_SPEED = 1.5;
 
 function CurvedImageScroll() {
   const containerRef = useRef(null);
   const [containerWidth, setContainerWidth] = useState(0);
-  const scrollX = useMotionValue(0);
-  const springX = useSpring(scrollX, { damping: 30, stiffness: 200, mass: 0.5 });
-  const isDragging = useRef(false);
-  const startX = useRef(0);
-  const startScroll = useRef(0);
+  const [dims, setDims] = useState(getCardDimensions());
 
-  const allImages = Array.from({ length: SETS }, () => IMAGES).flat();
-  const singleSetWidth = IMAGES.length * CARD_TOTAL;
+  const { width: CARD_WIDTH, gap: CARD_GAP, height: CARD_HEIGHT, containerHeight: CONTAINER_HEIGHT } = dims;
+  const CARD_TOTAL = CARD_WIDTH + CARD_GAP;
+
+  useEffect(() => {
+    const update = () => {
+      setDims(getCardDimensions());
+    };
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
+  const scrollX = useMotionValue(0);
+
+  const allMedia = [...MEDIA, ...MEDIA, ...MEDIA];
+  const singleSetWidth = MEDIA.length * CARD_TOTAL;
 
   useEffect(() => {
     const measure = () => {
@@ -44,164 +58,139 @@ function CurvedImageScroll() {
     return () => window.removeEventListener("resize", measure);
   }, []);
 
-  // Start in the middle set so we can scroll both directions
+  // Continuous Auto Scroll (Seamless Infinite)
   useEffect(() => {
-    if (containerWidth > 0) {
-      const middleSet = Math.floor(SETS / 2);
-      scrollX.set(middleSet * singleSetWidth);
-    }
-  }, [containerWidth, singleSetWidth, scrollX]);
+    let raf;
+    const tick = () => {
+      // Linear increment for perfect smoothness
+      let next = scrollX.get() + AUTO_SCROLL_SPEED;
 
-  // Infinite loop: when we scroll too far left or right, jump to the middle set
-  useEffect(() => {
-    const unsubscribe = scrollX.on("change", (v) => {
-      const minBound = singleSetWidth * 0.5;
-      const maxBound = singleSetWidth * (SETS - 1.5);
-      const middleOffset = Math.floor(SETS / 2) * singleSetWidth;
-
-      if (v < minBound) {
-        const diff = v - minBound;
-        scrollX.jump(middleOffset + diff);
-      } else if (v > maxBound) {
-        const diff = v - maxBound;
-        scrollX.jump(middleOffset + diff);
+      // Jump back seamlessly when we've scrolled past the second set
+      // This ensures the middle set is always the "active" one, providing seamless looping.
+      if (next >= 2 * singleSetWidth) {
+        next -= singleSetWidth; // Jump back by one full set
       }
-    });
-    return unsubscribe;
+
+      scrollX.set(next);
+      raf = requestAnimationFrame(tick);
+    };
+
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
   }, [scrollX, singleSetWidth]);
-
-  const handleWheel = useCallback(
-    (e) => {
-      e.preventDefault();
-      const delta = e.deltaX || e.deltaY;
-      if (delta <= 0) return;
-      const current = scrollX.get();
-      scrollX.set(current + delta);
-    },
-    [scrollX]
-  );
-
-  const handlePointerDown = useCallback(
-    (e) => {
-      isDragging.current = true;
-      startX.current = e.clientX;
-      startScroll.current = scrollX.get();
-      e.currentTarget.setPointerCapture(e.pointerId);
-    },
-    [scrollX]
-  );
-
-  const handlePointerMove = useCallback(
-    (e) => {
-      if (!isDragging.current) return;
-      const diff = startX.current - e.clientX;
-      if (diff <= 0) return;
-      scrollX.set(startScroll.current + diff);
-    },
-    [scrollX]
-  );
-
-  const handlePointerUp = useCallback(() => {
-    isDragging.current = false;
-  }, []);
 
   return (
     <>
       <div className="mt-30">
-          <h1 className="text-5xl md:text-7xl font-semibold text-gray-900 text-center mb-6">
-        Design to Stare
-      </h1>
+        <h1 className="text-5xl md:text-7xl font-semibold text-gray-900 text-center mb-6">
+          Design to Stare
+        </h1>
 
-      <p className="text-gray-500 text-center max-w-3xl ml-70 mb-10 text-lg">
-        We create the most stunning graphic designs for your social media,
-        websites, branding, or literally anything. They are just mind-blowing.
-      </p>
+        <p className="text-gray-500 text-center max-w-3xl mx-auto mb-10 text-lg">
+          We create the most stunning graphic designs for your social media,
+          websites, branding, or literally anything.
+        </p>
       </div>
-    <div className="w-full overflow-hidden pb-16 select-none" style={{ touchAction: "none" }}>
-      <div
-        ref={containerRef}
-        className="relative w-full overflow-hidden cursor-grab active:cursor-grabbing"
-        onWheel={handleWheel}
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-        onPointerCancel={handlePointerUp}
-        style={{ height: 460 }}
-      >
-        <motion.div
-          className="flex items-center absolute left-0 top-0 h-full"
-          style={{
-            x: useTransform(springX, (v) => -v),
-            gap: CARD_GAP,
-          }}
+
+      <div className="w-full overflow-hidden pb-16 select-none">
+        <div
+          ref={containerRef}
+          className="relative w-full overflow-hidden"
+          style={{ height: CONTAINER_HEIGHT, perspective: "1000px" }}
         >
-          {allImages.map((src, i) => (
-            <ImageCard
-              key={i}
-              src={src}
-              index={i}
-              scrollX={springX}
-              containerWidth={containerWidth}
-            />
-          ))}
-        </motion.div>
+          <motion.div
+            className="flex items-center absolute left-0 top-0 h-full"
+            style={{
+              x: useTransform(scrollX, (v) => -v),
+              transformStyle: "preserve-3d",
+            }}
+          >
+            {allMedia.map((item, i) => (
+              <MediaCard
+                key={i}
+                item={item}
+                index={i}
+                scrollX={scrollX}
+                containerWidth={containerWidth}
+              />
+            ))}
+          </motion.div>
+        </div>
       </div>
-      </div>
-      </>
+    </>
   );
 }
 
-function ImageCard({ src, index, scrollX, containerWidth }) {
+function MediaCard({ item, index, scrollX, containerWidth }) {
+  const CARD_WIDTH = getCardDimensions().width;
+  const CARD_GAP = getCardDimensions().gap;
+  const CARD_TOTAL = CARD_WIDTH + CARD_GAP;
   const cardCenter = index * CARD_TOTAL + CARD_WIDTH / 2;
 
-  // Side images are big (1.1), center image is small (0.75)
-  const scale = useTransform(scrollX, (sv) => {
+  const getNormalizedX = (sv) => {
     const viewCenter = sv + containerWidth / 2;
-    const dist = Math.abs(cardCenter - viewCenter);
-    const maxDist = containerWidth / 2;
-    const normalized = Math.min(dist / maxDist, 1);
-    return 0.75 + normalized * 0.35;
+    return (cardCenter - viewCenter) / (containerWidth / 2);
+  };
+
+  const rotateY = useTransform(scrollX, (sv) => {
+    const nx = getNormalizedX(sv);
+    return nx * -25;
   });
 
-  const y = useTransform(scrollX, () => 0);
+  const translateZ = useTransform(scrollX, (sv) => {
+    const nx = getNormalizedX(sv);
+    return (1 - Math.abs(nx)) * -350;
+  });
 
-  // Depth effect: center has less opacity, sides are fully visible
+  const scale = useTransform(scrollX, (sv) => {
+    const nx = getNormalizedX(sv);
+    return 0.85 + Math.abs(nx) * 0.15;
+  });
+
   const opacity = useTransform(scrollX, (sv) => {
-    const viewCenter = sv + containerWidth / 2;
-    const dist = Math.abs(cardCenter - viewCenter);
-    const maxDist = containerWidth / 2;
-    const normalized = Math.min(dist / maxDist, 1);
-    return 0.6 + normalized * 0.4;
+    const nx = getNormalizedX(sv);
+    return 1 - Math.min(Math.abs(nx) * 0.4, 0.4);
   });
 
   const borderRadius = useTransform(scrollX, (sv) => {
-    const viewCenter = sv + containerWidth / 2;
-    const dist = Math.abs(cardCenter - viewCenter);
-    const maxDist = containerWidth / 2;
-    const normalized = Math.min(dist / maxDist, 1);
-    const radius = 12 + (1 - normalized) * 16;
+    const nx = getNormalizedX(sv);
+    const radius = 12 + (1 - Math.abs(nx)) * 16;
     return `${radius}px`;
   });
 
   return (
     <motion.div
-      className="flex-shrink-0 overflow-hidden shadow-lg"
+      className="flex-shrink-0 overflow-hidden shadow-2xl relative"
       style={{
-        width: CARD_WIDTH,
-        height: 320,
+        width: getCardDimensions().width,
+        height: getCardDimensions().height,
+        rotateY,
+        translateZ,
         scale,
-        y,
         opacity,
         borderRadius,
-        transformOrigin: "center center",
+        marginRight: getCardDimensions().gap,
+        transformStyle: "preserve-3d",
       }}
     >
-      <img
-        src={src}
-        alt=""
-        className="w-full h-full object-cover pointer-events-none"
-        draggable={false}
-      />
+      {item.type === "video" ? (
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="w-full h-full object-cover pointer-events-none"
+        >
+          <source src={item.url} type="video/mp4" />
+        </video>
+      ) : (
+        <img
+          src={item.url}
+          alt=""
+          className="w-full h-full object-cover pointer-events-none"
+          draggable={false}
+        />
+      )}
     </motion.div>
   );
 }

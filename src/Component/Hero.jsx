@@ -40,17 +40,17 @@ const Hero = () => {
 
   const current = stages[stage].id;
 
-  const Dots = ({ size = "w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12" }) => (
+  const Dots = ({ size = "w-6 h-6 sm:w-10 sm:h-10 md:w-16 md:h-16 lg:w-20 lg:h-20" }) => (
     <div className={`relative ${size}`}>
       {[0, 1, 2, 3, 4, 5, 6].map((i) => (
         <div
           key={i}
-          className="absolute w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full"
+          className="absolute w-[15%] h-[15%] rounded-full"
           style={{
             backgroundColor: ["#2E1A47", "#5CB85C", "#3498DB", "#2C3E50", "#E91E63", "#FF9800", "#FFC107"][i],
             top: "50%",
             left: "50%",
-            transform: `rotate(${i * 51.4}deg) translate(14px) rotate(-${i * 51.4}deg)`,
+            transform: `rotate(${i * 51.4}deg) translate(250%) rotate(-${i * 51.4}deg)`,
           }}
         />
       ))}
@@ -58,7 +58,7 @@ const Hero = () => {
   );
 
   return (
-    <div className="relative w-full min-h-screen flex items-center justify-center  overflow-x-hidden px- sm:px-3 text-center">
+    <div id="hero" className="relative w-full min-h-screen flex items-center justify-center  overflow-x-hidden px- sm:px-3 text-center">
 
       <AnimatePresence mode="wait">
 
@@ -71,12 +71,12 @@ const Hero = () => {
             exit={{ opacity: 0 }}
             className="flex flex-wrap items-center justify-center gap-3"
           >
-            <span className="text-3xl sm:text-5xl md:text-7xl font-bold text-[#2E1A47]">
+            <span className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-[#2E1A47] tracking-tight">
               DiGi Trend
             </span>
             <Dots />
             <span
-              className="text-3xl sm:text-5xl md:text-7xl font-light bg-clip-text text-transparent"
+              className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-light bg-clip-text text-transparent"
               style={{
                 backgroundImage:
                   "linear-gradient(90deg, #5CB85C, #3498DB, #2C3E50, #E91E63, #FF9800, #FFC107)",
@@ -127,7 +127,7 @@ const Hero = () => {
             </span>
 
             <div
-              className="relative px-6 sm:px-10 md:px-16 py-6 sm:py-10 rounded-full w-full"
+              className="relative px-6 sm:px-10 md:px-14 lg:px-20 py-4 sm:py-8 md:py-10 rounded-full w-full max-w-[90vw] mx-auto"
               style={{
                 background:
                   "linear-gradient(white, white) padding-box, linear-gradient(90deg, #5CB85C, #3498DB, #E91E63, #FF9800) border-box",
@@ -139,7 +139,7 @@ const Hero = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="text-xl sm:text-3xl md:text-5xl font-bold break-words"
+                className="text-lg sm:text-2xl md:text-4xl lg:text-5xl font-bold break-words leading-tight"
               >
                 {pillText}
               </motion.div>
@@ -177,13 +177,13 @@ const Hero = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="flex flex-col md:flex-row items-center justify-center gap-4"
+            className="flex flex-col md:flex-row items-center justify-center gap-4 px-2"
           >
-            <span className="text-4xl sm:text-6xl md:text-8xl font-bold text-[#2E1A47]">
+            <span className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-bold text-[#2E1A47]">
               DiGi Trend
             </span>
-            <Dots size="w-12 h-12 md:w-20 md:h-20" />
-            <span className="text-4xl sm:text-6xl md:text-8xl font-light text-[#2E1A47]">
+            <Dots size="w-10 h-10 sm:w-14 sm:h-14 md:w-20 md:h-20" />
+            <span className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-light text-[#2E1A47]">
               intelligence
             </span>
           </motion.div>
