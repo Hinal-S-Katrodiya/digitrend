@@ -15,9 +15,6 @@ import FAQSection from '../Component/FAQ'
 import Footer from '../Component/Footer'
 import Contact from '../Component/Contact'
 
-
-
-
 function Home() {
   return (
     <>

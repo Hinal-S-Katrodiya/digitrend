@@ -22,19 +22,18 @@ const socialLinks = [
 
 const NavLink = ({ href, children }) => {
   return (
-   
     <Link
       to={href}
       target="_blank"
       rel="noopener noreferrer"
       className="group relative inline-block overflow-hidden font-oswald text-4xl font-bold tracking-wide"
     >
-      {/* Default Text */}
-      <span className="block text-[#1a1a1a] transition-colors duration-300 group-hover:text-transparent">
+      {/* Default Text - White */}
+      <span className="block text-white transition-colors duration-300 group-hover:text-transparent">
         {children}
       </span>
 
-      {/* Gold Gradient Hover Text */}
+      {/* Tech Blue Hover Text */}
       <span
         className="
           absolute
@@ -44,20 +43,13 @@ const NavLink = ({ href, children }) => {
           group-hover:translate-x-0
           transition-transform
           duration-500
-          bg-gradient-to-r
-          from-[#f5b030]
-          via-[#b8700a]
-          to-[#4d2d02]
-          bg-clip-text
-          text-transparent
+          text-[#3B82F6]
         "
       >
         {children}
       </span>
       </Link>
-      
       );
-   
 };
 
 
@@ -67,7 +59,7 @@ const ContactLink = ({ href, children }) => {
       to={href}
       className="group relative inline-block overflow-hidden font-oswald text-sm"
     >
-      <span className="block text-[#222] transition-colors duration-300 group-hover:text-transparent">
+      <span className="block text-white transition-colors duration-300 group-hover:text-transparent">
         {children}
       </span>
 
@@ -80,12 +72,7 @@ const ContactLink = ({ href, children }) => {
           group-hover:translate-x-0
           transition-transform
           duration-500
-          bg-gradient-to-r
-          from-[#f5b030]
-          via-[#b8700a]
-          to-[#4d2d02]
-          bg-clip-text
-          text-transparent
+          text-[#3B82F6]
         "
       >
         {children}
@@ -126,7 +113,7 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer className="relative w-full flex flex-col overflow-hidden min-h-screen rounded-t-4xl bg-amber-100 font-oswald">
+    <footer className="relative w-full flex flex-col overflow-hidden min-h-screen rounded-t-4xl bg-[#0F172A] font-oswald text-white">
 
       {/* TOP SECTION */}
       <div className="flex justify-between items-start px-20 pt-14 pb-8 flex-wrap gap-10">
@@ -135,24 +122,24 @@ export default function Footer() {
         <div className="flex flex-col gap-6 font-bold text-m">
 
           <div>
-            <p className="uppercase text-3xl font-bold tracking-wide text-[#b8750a]">
+            <p className="uppercase text-3xl font-bold tracking-wide text-slate-400">
               Phone
             </p>
             <ContactLink  href="#">+91 9987726922</ContactLink>
           </div>
 
           <div>
-            <p className="uppercase text-3xl font-bold tracking-wide text-[#b8750a]">
+            <p className="uppercase text-3xl font-bold tracking-wide text-slate-400">
               Email
             </p>
             <ContactLink href="#">hello@digitrend.in</ContactLink>
           </div>
 
           <div>
-            <p className="uppercase text-3xl font-bold tracking-wide text-[#b8750a]">
+            <p className="uppercase text-3xl font-bold tracking-wide text-slate-400">
               Address
             </p>
-            <p className="text-m leading-loose text-[#222]">
+            <p className="text-m leading-loose text-white font-normal mt-2">
               Deep Darshan Apartment,<br />
               Office No - 205 Karanjade,<br />
               Panvel - 410206
@@ -160,10 +147,10 @@ export default function Footer() {
           </div>
 
           <div>
-            <p className="uppercase text-3xl font-bold tracking-wide text-[#b8750a]">
+            <p className="uppercase text-3xl font-bold tracking-wide text-slate-400">
               Opening Hours
             </p>
-            <p className="text-m leading-loose text-[#222]">
+            <p className="text-m leading-loose text-white font-normal mt-2">
               Mon to Fri: 9.00am - 9.00pm<br />
               Sat & Sun: Closed
             </p>
@@ -174,7 +161,7 @@ export default function Footer() {
         {/* RIGHT */}
         <div className="flex gap-20">
 
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-2">
             {navLinks.map((l) => (
               <NavLink key={l.name} href={l.href}>
                 {l.name}
@@ -182,7 +169,7 @@ export default function Footer() {
             ))}
           </div>
 
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-2">
             {socialLinks.map((l) => (
               <NavLink key={l.name} href={l.href}>
                 {l.name}
@@ -195,31 +182,31 @@ export default function Footer() {
 
       {/* BIG TEXT */}
       <div
-  ref={wrapRef}
-  className="flex-1 flex items-center justify-center overflow-hidden w-full px-7 "
->
-  <span
-    ref={textRef}
-    style={{ fontSize: `${fontSize}px` }}
-    className="
-      uppercase
-      font-bold
-      leading-[0.83]
-      tracking-[-2px]
-      whitespace-nowrap
-      select-none
-      bg-gradient-to-b
-      from-[#f5b030]
-      via-[#b8700a]
-      to-[#432701]
-      bg-clip-text
-      text-transparent
-      text-center
-    "
-  >
-    DiGi Trend
-  </span>
-</div>
+        ref={wrapRef}
+        className="flex-1 flex items-center justify-center overflow-hidden w-full px-7 "
+      >
+        <span
+          ref={textRef}
+          style={{ fontSize: `${fontSize}px` }}
+          className="
+            uppercase
+            font-bold
+            leading-[0.83]
+            tracking-tight
+            whitespace-nowrap
+            select-none
+            bg-gradient-to-b
+            from-[#1E293B]
+            to-[#0F172A]
+            bg-clip-text
+            text-transparent
+            text-center
+            opacity-80
+          "
+        >
+          DiGi Trend
+        </span>
+      </div>
 
 
       {/* BOTTOM BAR */}
@@ -230,26 +217,22 @@ export default function Footer() {
         flex-wrap
         gap-2
         px-20
-        py-3
+        py-4
         border-t
-        border-[#b8750a]/20
-        bg-[#b8750a]/5
+        border-slate-800
+        bg-[#0B1221]
       ">
-        <p className="text-xs text-gray-500">
+        <p className="text-xs text-slate-400 font-sans tracking-wide">
           © 2026. DiGi Trend.in. All Rights Reserved
         </p>
 
-        <p className="text-xs text-gray-500">
+        <p className="text-xs text-slate-400 font-sans tracking-wide">
           Developed by{" "}
           <span className="
             font-bold
             tracking-widest
             text-sm
-            bg-gradient-to-r
-            from-[#e8a020]
-            to-[#b8700a]
-            bg-clip-text
-            text-transparent
+            text-[#3B82F6]
           ">
             DiGi Trend
           </span>

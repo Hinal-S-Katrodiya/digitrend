@@ -1,7 +1,7 @@
 // FeatureCards.jsx
-import fastDeliveryImg from "../assets/fast-delivery.png";
-import transparentPricingImg from "../assets/transparent-pricing.png";
-import everythingOneRoofImg from "../assets/everything-one-roof.png";
+import fastDeliveryImg from "../assets/undraw_activity-tracker_3o6r.png";
+import transparentPricingImg from "../assets/undraw_stripe-payments_jxnn.png";
+import everythingOneRoofImg from "../assets/undraw_business-decisions_3x2a.png";
 
 const features = [
   {

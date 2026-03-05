@@ -46,11 +46,11 @@ export default function Third() {
       <motion.div
         animate={{ y: [0, -30, 0], rotate: [0, 5, 0] }}
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        style={{
+        style={{    
           clipPath:
             "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)",
         }}
-        className="absolute top-10 left-10 md:top-24 md:left-46 w-24 h-24 md:w-38 md:h-38 bg-gradient-to-br from-indigo-500/60 to-blue-400/40 backdrop-blur-3xl border border-white/40 shadow-2xl flex items-center justify-center text-white font-semibold text-lg md:text-xl"
+        className="absolute top-10 left-10 sm:top-84 md:top-64 md:left-46 w-24 h-24 md:w-38 md:h-38 bg-gradient-to-br from-indigo-500/60 to-blue-400/40 backdrop-blur-3xl border border-white/40 shadow-2xl flex items-center justify-center text-white font-semibold md:text-2xl "
       >
         Timeless
       </motion.div>
@@ -72,7 +72,7 @@ export default function Third() {
       <motion.div
         animate={{ y: [0, -15, 0], rotate: [0, -5, 0] }}
         transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-1/2 -translate-y-1/2 right-10 md:top-1/3 md:right-40 w-20 h-20 md:w-32 md:h-32 flex items-center justify-center"
+        className="absolute top-1/2 -translate-y-1/2 right-10 sm:top-24 md:top-1/3 md:right-40 w-20 h-20  md:w-32 md:h-32 flex items-center justify-center"
       >
         <svg viewBox="0 0 200 200" className="w-full h-full">
           {(() => {

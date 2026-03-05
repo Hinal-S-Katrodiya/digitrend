@@ -99,23 +99,21 @@ const ServicesComponent = ({ id }) => {
     <div id={id} className="min-h-screen w-full bg-white py-20 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-7xl mx-auto">
         {/* Header Section */}
-        <section className="relative  flex items-center justify-center px-6 py-20 overflow-hidden">
-
+        <section className="relative flex items-center justify-center px-6 py-20 overflow-hidden">
           <div className="relative text-center">
-
             {/* First Line */}
-            <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-[100px] 
-                       font-extrabold leading-[0.9] tracking-tight text-black">
+            <h1 className="text-4xl sm:text-9xl md:text-7xl lg:text-[100px] 
+                       font-extrabold leading-[0.9] tracking-tight text-[#0F172A]">
               What we&apos;re
             </h1>
 
             {/* Second Line */}
             <h2 className="text-4xl sm:text-5xl md:text-7xl lg:text-[100px] 
-                       font-extrabold leading-[0.9] tracking-tight text-black">
+                       font-extrabold leading-[0.9] tracking-tight text-[#0F172A]">
               absolutely killer at
             </h2>
 
-            {/* Yellow Bubble */}
+            {/* Bubble Container (Needs update inside StarBubble.js) */}
             <div className="absolute 
                         top-[52%] 
                         left-[42%] 
@@ -123,31 +121,30 @@ const ServicesComponent = ({ id }) => {
                         -translate-x-1/2 
                         -translate-y-1/2 
                         rotate-[-12deg] ">
-
               <div className="relative w-12 h-14 md:w-16 md:h-16 ">
                 <StarburstBubble />
               </div>
             </div>
-
           </div>
         </section>
+
         {/* Services Accordion */}
         <div className="space-y-6">
           {services.map((service) => (
             <div
               key={service.id}
-              className="bg-amber-50 rounded-3xl overflow-hidden transition-all duration-300 ease-in-out"
+              className="bg-[#F8FAFC] rounded-3xl overflow-hidden transition-all duration-300 ease-in-out border border-gray-100"
             >
               {/* Service Header - Clickable */}
               <button
                 onClick={() => toggleService(service.id)}
-                className="w-full px-8 sm:px-12 py-8 flex items-center justify-between hover:bg-amber-100 transition-colors duration-200 cursor-pointer group"
+                className="w-full px-8 sm:px-12 py-8 flex items-center justify-between hover:bg-[#F1F5F9] transition-colors duration-200 cursor-pointer group"
               >
                 <div className="flex-1 text-left">
-                  <h3 className="text-3xl sm:text-4xl font-bold text-black mb-2 group-hover:text-gray-800 transition-colors">
+                  <h3 className="text-3xl sm:text-4xl font-bold text-[#0F172A] mb-2 transition-colors">
                     {service.title}
                   </h3>
-                  <p className="text-lg sm:text-xl text-black font-normal">
+                  <p className="text-lg sm:text-xl text-[#334155] font-normal">
                     {service.subtitle}
                   </p>
                 </div>
@@ -157,7 +154,7 @@ const ServicesComponent = ({ id }) => {
                   <div className="w-12 h-12 flex items-center justify-center">
                     {expandedService === service.id ? (
                       <svg
-                        className="w-10 h-10 text-black transition-transform duration-300"
+                        className="w-10 h-10 text-[#3B82F6] transition-transform duration-300"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -171,7 +168,7 @@ const ServicesComponent = ({ id }) => {
                       </svg>
                     ) : (
                       <svg
-                        className="w-10 h-10 text-black transition-transform duration-300"
+                        className="w-10 h-10 text-[#3B82F6] transition-transform duration-300"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -188,11 +185,6 @@ const ServicesComponent = ({ id }) => {
                 </div>
               </button>
 
-              {/* Divider Line */}
-              <div className="px-8 sm:px-12">
-                <div className="h-px bg-black opacity-20"></div>
-              </div>
-
               {/* Expandable Content */}
               <div
                 className={`overflow-hidden transition-all duration-500 ease-in-out ${expandedService === service.id
@@ -200,18 +192,23 @@ const ServicesComponent = ({ id }) => {
                   : 'max-h-0 opacity-0'
                   }`}
               >
+                {/* Internal Divider Line */}
+                <div className="px-8 sm:px-12">
+                  <div className="h-px bg-gray-200"></div>
+                </div>
+                
                 <div className="px-8 sm:px-12 py-8">
-                  <p className="text-lg text-gray-800 mb-6 leading-relaxed">
+                  <p className="text-lg text-[#334155] mb-6 leading-relaxed">
                     {service.description}
                   </p>
 
                   <div className="mt-6">
-                    <h4 className="text-xl font-bold text-black mb-4">What We Offer:</h4>
+                    <h4 className="text-xl font-bold text-[#0F172A] mb-4">What We Offer:</h4>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {service.features.map((feature, index) => (
                         <div key={index} className="flex items-start">
                           <svg
-                            className="w-5 h-5 text-black mt-1 mr-3 flex-shrink-0"
+                            className="w-5 h-5 text-[#3B82F6] mt-1 mr-3 flex-shrink-0"
                             fill="currentColor"
                             viewBox="0 0 20 20"
                           >
@@ -221,14 +218,14 @@ const ServicesComponent = ({ id }) => {
                               clipRule="evenodd"
                             />
                           </svg>
-                          <span className="text-gray-800">{feature}</span>
+                          <span className="text-[#334155]">{feature}</span>
                         </div>
                       ))}
                     </div>
                   </div>
 
                   <div className="mt-8">
-                    <button className="bg-black text-white px-8 py-3 rounded-full font-semibold hover:bg-gray-800 transition-colors duration-200">
+                    <button className="bg-[#3B82F6] text-white px-8 py-3 rounded-full font-semibold hover:bg-[#2563EB] transition-colors duration-200 shadow-md">
                       Learn More
                     </button>
                   </div>

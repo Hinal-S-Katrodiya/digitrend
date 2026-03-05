@@ -1,5 +1,5 @@
-import { useRef, useState, useEffect, useCallback } from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { useRef, useState, useEffect } from "react";
+import { motion, useMotionValue, useTransform } from "framer-motion";
 
 const MEDIA = [
   { type: "image", url: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=600&h=800&fit=crop" },
@@ -16,22 +16,23 @@ const MEDIA = [
 
 const getCardDimensions = () => {
   if (typeof window === "undefined")
-    return { width: 220, gap: 18, height: 320, containerHeight: 460 };
+    return { width: 220, gap: 18, height: 380, containerHeight: 520 }; // Increased Desktop Height
 
   const w = window.innerWidth;
-  if (w < 640) return { width: 140, gap: 12, height: 200, containerHeight: 250 };
-  if (w < 1024) return { width: 180, gap: 15, height: 260, containerHeight: 380 };
-  return { width: 220, gap: 18, height: 320, containerHeight: 460 };
+  if (w < 640) return { width: 140, gap: 12, height: 260, containerHeight: 330 }; // Increased Mobile Height
+  if (w < 1024) return { width: 180, gap: 15, height: 320, containerHeight: 420 }; // Increased Tablet Height
+  return { width: 220, gap: 18, height: 380, containerHeight: 520 }; // Increased Desktop Height
 };
 
 const AUTO_SCROLL_SPEED = 1.5;
 
 function CurvedImageScroll() {
   const containerRef = useRef(null);
+  const isDragging = useRef(false); // Ref to track if the user is currently dragging
   const [containerWidth, setContainerWidth] = useState(0);
   const [dims, setDims] = useState(getCardDimensions());
 
-  const { width: CARD_WIDTH, gap: CARD_GAP, height: CARD_HEIGHT, containerHeight: CONTAINER_HEIGHT } = dims;
+  const { width: CARD_WIDTH, gap: CARD_GAP, containerHeight: CONTAINER_HEIGHT } = dims;
   const CARD_TOTAL = CARD_WIDTH + CARD_GAP;
 
   useEffect(() => {
@@ -62,16 +63,17 @@ function CurvedImageScroll() {
   useEffect(() => {
     let raf;
     const tick = () => {
-      // Linear increment for perfect smoothness
-      let next = scrollX.get() + AUTO_SCROLL_SPEED;
+      // Only auto-scroll if the user is not actively dragging
+      if (!isDragging.current) {
+        let next = scrollX.get() + AUTO_SCROLL_SPEED;
 
-      // Jump back seamlessly when we've scrolled past the second set
-      // This ensures the middle set is always the "active" one, providing seamless looping.
-      if (next >= 2 * singleSetWidth) {
-        next -= singleSetWidth; // Jump back by one full set
+        // Jump back seamlessly when we've scrolled past the second set
+        if (next >= 2 * singleSetWidth) {
+          next -= singleSetWidth; 
+        }
+
+        scrollX.set(next);
       }
-
-      scrollX.set(next);
       raf = requestAnimationFrame(tick);
     };
 
@@ -79,31 +81,58 @@ function CurvedImageScroll() {
     return () => cancelAnimationFrame(raf);
   }, [scrollX, singleSetWidth]);
 
+  // Handle Drag/Swipe functionality
+  const handlePanStart = () => {
+    isDragging.current = true;
+  };
+
+  const handlePanEnd = () => {
+    isDragging.current = false;
+  };
+
+  const handlePan = (e, info) => {
+    let next = scrollX.get() - info.delta.x;
+
+    // Handle seamless looping in both directions when dragging manually
+    if (next >= 2 * singleSetWidth) {
+      next -= singleSetWidth;
+    } else if (next <= 0) {
+      next += singleSetWidth;
+    }
+
+    scrollX.set(next);
+  };
+
   return (
     <>
-      <div className="mt-30">
-        <h1 className="text-5xl md:text-7xl font-semibold text-gray-900 text-center mb-6">
+      <div className="mt-30 bg-white pt-10">
+        {/* Updated heading to Deep Navy to match Enterprise Trust theme */}
+        <h1 className="text-5xl md:text-7xl font-bold text-[#0F172A] text-center mb-6 tracking-tight">
           Design to Stare
         </h1>
 
-        <p className="text-gray-500 text-center max-w-3xl mx-auto mb-10 text-lg">
+        {/* Updated paragraph to cool Slate Gray */}
+        <p className="text-[#334155] text-center max-w-3xl mx-auto mb-10 text-lg">
           We create the most stunning graphic designs for your social media,
           websites, branding, or literally anything.
         </p>
       </div>
 
-      <div className="w-full overflow-hidden pb-16 select-none">
+      <div className="w-full overflow-hidden pb-16 select-none bg-white">
         <div
           ref={containerRef}
           className="relative w-full overflow-hidden"
           style={{ height: CONTAINER_HEIGHT, perspective: "1000px" }}
         >
           <motion.div
-            className="flex items-center absolute left-0 top-0 h-full"
+            className="flex items-center absolute left-0 top-0 h-full cursor-grab active:cursor-grabbing touch-pan-y"
             style={{
               x: useTransform(scrollX, (v) => -v),
               transformStyle: "preserve-3d",
             }}
+            onPanStart={handlePanStart}
+            onPanEnd={handlePanEnd}
+            onPan={handlePan}
           >
             {allMedia.map((item, i) => (
               <MediaCard
@@ -112,6 +141,7 @@ function CurvedImageScroll() {
                 index={i}
                 scrollX={scrollX}
                 containerWidth={containerWidth}
+                dims={dims}
               />
             ))}
           </motion.div>
@@ -121,9 +151,8 @@ function CurvedImageScroll() {
   );
 }
 
-function MediaCard({ item, index, scrollX, containerWidth }) {
-  const CARD_WIDTH = getCardDimensions().width;
-  const CARD_GAP = getCardDimensions().gap;
+function MediaCard({ item, index, scrollX, containerWidth, dims }) {
+  const { width: CARD_WIDTH, gap: CARD_GAP, height: CARD_HEIGHT } = dims;
   const CARD_TOTAL = CARD_WIDTH + CARD_GAP;
   const cardCenter = index * CARD_TOTAL + CARD_WIDTH / 2;
 
@@ -160,16 +189,16 @@ function MediaCard({ item, index, scrollX, containerWidth }) {
 
   return (
     <motion.div
-      className="flex-shrink-0 overflow-hidden shadow-2xl relative"
+      className="flex-shrink-0 overflow-hidden shadow-2xl relative bg-gray-100"
       style={{
-        width: getCardDimensions().width,
-        height: getCardDimensions().height,
+        width: CARD_WIDTH,
+        height: CARD_HEIGHT,
         rotateY,
         translateZ,
         scale,
         opacity,
         borderRadius,
-        marginRight: getCardDimensions().gap,
+        marginRight: CARD_GAP,
         transformStyle: "preserve-3d",
       }}
     >

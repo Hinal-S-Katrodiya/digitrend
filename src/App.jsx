@@ -6,23 +6,15 @@ import { Routes, Route } from "react-router-dom";
 import Third from './Component/Third';
 import FeatureCards from './Component/Feature';
 
-
 function App() {
- 
-
   return (
     <>
-      <Header/>
+      <Header />
       <Routes>
         <Route path='/' element={<Home />} />
-        
+
       </Routes>
-      
-        
-      
-      
-     
-      
+
     </>
   )
 }

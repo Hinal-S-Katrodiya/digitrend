@@ -1,19 +1,20 @@
 import { useRef, useState, useEffect } from "react";
 
 // ─── Brand data ─────────────────────────────────────────────
+// Changed all text colors to Deep Navy (#0F172A) for the Enterprise Trust theme
 const BRANDS = [
-  { id: "inkspire", label: "Inkspire\nTattoo", emoji: "🌹", textColor: "black" },
-  { id: "ancestral", label: "Ancestral\nHouse", emoji: "🏠", textColor: "#5c3d11" },
-  { id: "greenden", label: "Greenden\nGym", emoji: "💪", textColor: "#1b5e20" },
-  { id: "kinography", label: "Kinography", emoji: "🎥", textColor: "#888" },
-  { id: "beast", label: "Beast\nMode", emoji: "🐉", textColor: "#4c1d95" },
-  { id: "studio", label: "Studio\nBloom", emoji: "🌸", textColor: "#9b1a52" },
-  { id: "apexlabs", label: "Apex\nLabs", emoji: "⚡", textColor: "#1e3a8a" },
-  { id: "terra", label: "Terra\nRoots", emoji: "🌿", textColor: "#78350f" },
-  { id: "nova", label: "Nova\nWorks", emoji: "🚀", textColor: "#f97316" },
+  { id: "inkspire", label: "Inkspire\nTattoo", emoji: "🌹", textColor: "#0F172A" },
+  { id: "ancestral", label: "Ancestral\nHouse", emoji: "🏠", textColor: "#0F172A" },
+  { id: "greenden", label: "Greenden\nGym", emoji: "💪", textColor: "#0F172A" },
+  { id: "kinography", label: "Kinography", emoji: "🎥", textColor: "#0F172A" },
+  { id: "beast", label: "Beast\nMode", emoji: "🐉", textColor: "#0F172A" },
+  { id: "studio", label: "Studio\nBloom", emoji: "🌸", textColor: "#0F172A" },
+  { id: "apexlabs", label: "Apex\nLabs", emoji: "⚡", textColor: "#0F172A" },
+  { id: "terra", label: "Terra\nRoots", emoji: "🌿", textColor: "#0F172A" },
+  { id: "nova", label: "Nova\nWorks", emoji: "🚀", textColor: "#0F172A" },
 ];
 
-const SPEED = 1;        // Snake speed
+const SPEED = .8;        // Snake speed
 const AMPLITUDE = 60;   // Wave height
 const WAVELENGTH = 600; // Wave density
 
@@ -22,24 +23,26 @@ export default function SpiralBrands({ id }) {
   const offsetRef = useRef(0);
   const rafRef = useRef(null);
 
+  // Increased default card size for desktop
   const [dims, setDims] = useState({
-    cardW: 160,
-    cardH: 90,
+    cardW: 200, 
+    cardH: 100, 
   });
 
   // ─── Responsive sizing ────────────────────────────────────
   useEffect(() => {
     const update = () => {
       const w = window.innerWidth;
-      let cardW = 160;
-      let cardH = 90;
+      // Increased base sizes
+      let cardW = 200; 
+      let cardH = 100;
 
       if (w < 640) {
-        cardW = 110;
-        cardH = 65;
+        cardW = 140; // Increased mobile width
+        cardH = 75;  // Increased mobile height
       } else if (w < 1024) {
-        cardW = 140;
-        cardH = 80;
+        cardW = 170; // Increased tablet width
+        cardH = 85;  // Increased tablet height
       }
 
       setDims({ cardW, cardH });
@@ -96,16 +99,15 @@ export default function SpiralBrands({ id }) {
   return (
     <div
       id={id}
-      className="w-full relative overflow-hidden py-16 select-none"
-      style={{ backgroundColor: "white" }}
+      className="w-full relative overflow-hidden py-16 select-none bg-white"
     >
-      {/* Background Pattern */}
+      {/* Background Pattern - Changed dots to a cool slate gray for tech vibe */}
       <div
         className="absolute inset-0 pointer-events-none opacity-[0.5]"
         style={{
           backgroundImage: `
-            radial-gradient(circle, #e8e1d5 1.5px, transparent 1.5px),
-            radial-gradient(circle, #e8e1d5 1.5px, transparent 1.5px)
+            radial-gradient(circle, #E2E8F0 1.5px, transparent 1.5px),
+            radial-gradient(circle, #E2E8F0 1.5px, transparent 1.5px)
           `,
           backgroundPosition: "0 0, 10px 10px",
           backgroundSize: "20px 20px",
@@ -113,7 +115,8 @@ export default function SpiralBrands({ id }) {
       />
 
       <div className="text-center mb-10 relative z-10 px-4">
-        <p className="text-[24px] md:text-[30px] tracking-[0.4em] uppercase text-gray-400 mb-2">
+        {/* Changed heading text color to Deep Navy */}
+        <p className="text-[24px] md:text-[30px] tracking-[0.4em] uppercase text-[#0F172A] font-bold mb-2">
           Trusted Partners
         </p>
       </div>
@@ -141,7 +144,7 @@ export default function SpiralBrands({ id }) {
 function BrandCard({ brand, index, dims }) {
   return (
     <div
-      className="sarpakar-item absolute top-0 left-0 flex items-center justify-center bg-white shadow-sm"
+      className="sarpakar-item absolute top-0 left-0 flex items-center justify-center bg-white shadow-md border border-gray-100"
       data-index={index}
       style={{
         width: dims.cardW,
@@ -151,12 +154,12 @@ function BrandCard({ brand, index, dims }) {
         willChange: "transform",
       }}
     >
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3">
         {brand.emoji && (
-          <span className="text-xl md:text-2xl">{brand.emoji}</span>
+          <span className="text-2xl md:text-3xl">{brand.emoji}</span>
         )}
         <span
-          className="text-[9px] md:text-[11px] font-bold uppercase tracking-widest leading-none"
+          className="text-[10px] md:text-[12px] font-bold uppercase tracking-widest leading-snug whitespace-pre-line"
           style={{ color: brand.textColor }}
         >
           {brand.label}
